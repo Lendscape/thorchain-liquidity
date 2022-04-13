@@ -23,6 +23,7 @@
         "@xchainjs/xchain-ethereum": "^0.23.3",
         "@xchainjs/xchain-litecoin": "^0.8.0",
         "@xchainjs/xchain-thorchain": "^0.24.0",
+        "babel-preset-es2015": "^6.24.1",
         "clsx": "^1.1.1",
         "coingecko-api": "^1.0.10",
         "fs": "^0.0.1-security",

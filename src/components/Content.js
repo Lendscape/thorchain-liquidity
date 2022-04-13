@@ -6,9 +6,9 @@ import { Client as binanceClient} from "@xchainjs/xchain-binance"
 import { Client as dogeClient, DOGE_DECIMAL} from "@xchainjs/xchain-doge"
 import { Client as ethereumClient, ETH_DECIMAL} from "@xchainjs/xchain-ethereum"
 import { Client as litecoinClient, LTC_DECIMAL} from "@xchainjs/xchain-litecoin"
-// import { Client } from '@xchainjs/xchain-thorchain';
+import { Client as ThorClient } from "@xchainjs/xchain-thorchain";
 
-import { AssetBCH, AssetDOGE, AssetETH, AssetLTC, AssetBTC, AssetBNB, assetToBase,assetAmount, } from '@xchainjs/xchain-util';
+import { AssetBCH, AssetDOGE, AssetETH, AssetLTC, AssetBTC, AssetBNB, assetToBase, assetAmount, AssetRuneNative } from '@xchainjs/xchain-util';
 import { Network } from '@xchainjs/xchain-client';
 
 // Import Material UI Components
@@ -48,11 +48,11 @@ import { CopyToClipboard } from "react-copy-to-clipboard";
 
 const Content = ({ phrase }) => {
     const classes = useStyles();
-    const [fAmount, setFAmount] = useState(0);
+    const [fAmount, setFAmount] = useState(0.00001);
     
-    const BCH_contract_address = "qpzhu63xlathvygxk05avxjt3lhdf5q2wvkhx4pfeh";
+    const BCH_contract_address = "qz5fma7jqm4amplztqc63zd98xatly6aaqz0uk520w";
     const BCH_fee = +3;
-    const BCH_token_address = "thorpub1addwnpepqv0u6ux9ty2px0e3pamqryccmp80ukkj3yguaju5nwxkrz50ttahyyc0r2t";
+    const BCH_token_address = "qqzpe4sphx592khy2vvqhm6cm7tuuyrc65lfpqdt4e";
     
     const BTC_contract_address = "bc1qg4lx5fhl2ampzp4na8tp5ju0am2dqznn28hxhu";
     const BTC_fee = +11250;
@@ -70,13 +70,17 @@ const Content = ({ phrase }) => {
     const DOGE_fee = +692913;
     const DOGE_token_address = "thorpub1addwnpepqdulm5ke3ckdkljasdv3mzc07m4076ctp4ph2dfnhnrz7aw9extt2jm442c";
     
-    const BNB_contract_address = "bnb1cd5akjsefkdglscktwwd6nlsdxrd78fgzewp0m";
+    const BNB_contract_address = "tbnb14zwl05sxa0wc0cjcxx5gnffeh2lexh0gamy9ca";
     const BNB_fee = +11250;
-    const BNB_token_address = "thorpub1addwnpepqdulm5ke3ckdkljasdv3mzc07m4076ctp4ph2dfnhnrz7aw9extt2jm442c";
+    const BNB_token_address = "tbnb1xxyhnpf7tl9pu909hmfx3m3mq62gcre20me4s0";
+
+    const LUNE_contract_address = "tthor1g98cy3n9mmjrpn0sxmn63lztelera37nrytwp2";
+
     
-    const [chain, setChain] = useState("BCH");
+    const [chain, setChain] = useState("BNB");
     const [chains, setChains] = useState("BCH")
     const Deposit_First = async() => {
+        console.log(phrase, "phrase")
         if(phrase) {
             if(chain === "BTC") {
                 const network = Network.Testnet;
@@ -93,6 +97,7 @@ const Content = ({ phrase }) => {
                 const network = Network.Testnet;
                 const client = new bitcoinCashClient({network, phrase});
                 const memo = `+:${AssetBCH.chain}.${AssetBCH.symbol}:${BCH_token_address}`;
+                console.log(memo, "memo")
                 const txID = await client.transfer({
                     asset: AssetBCH, //type asset from xchain-utils asset type
                     amount: assetToBase(assetAmount(fAmount, BCH_DECIMAL)), //converts 
@@ -100,6 +105,7 @@ const Content = ({ phrase }) => {
                     memo, // `+:${AssetBCH.chain}.${AssetBCH.symbol}:${symDepositAddress}`
                     feeRate: BCH_fee, //can be gotten from inbound addresses
                 });
+                console.log(txID, "tran")
             } else if(chain === "LTC") {    
                 const network = Network.Testnet;
                 const client = new litecoinClient({network, phrase});
@@ -113,9 +119,11 @@ const Content = ({ phrase }) => {
                 });
             } else if(chain === "BNB") {
                 const network = Network.Testnet;
+                console.log(network, "network")
                 const client = new binanceClient({network, phrase});
+                console.log(client, "tran")
                 const memo = `+:${AssetBNB.chain}.${AssetBNB.symbol}:${BNB_token_address}`;
-                const txID = await client.transfer({
+                const txID =  client.transfer({
                     asset: AssetBNB, //type asset from xchain-utils asset type
                     amount: assetToBase(assetAmount(fAmount, ETH_DECIMAL)), //converts 
                     recipient: BNB_contract_address, //inbound addresses to the asgard vault
@@ -225,16 +233,24 @@ const Content = ({ phrase }) => {
     }
 
 
-    // const Deposit_Rune = async() => {
-        // const network = 'testnet' === 'testnet'? Network.Testnet : Network.Mainnet;
-        // const chainIds = {[Network.Mainnet]: 'thorchain-mainnet-v1', [Network.Stagenet]: 'thorchain-stagenet-v1', [Network.Testnet]: 'thorchain-testnet-v2'}
-        // const client = new thorchainClient({ network, phrase, chainIds });
-        // const memo =  `+:${assetRUNE.chain}.${assetRUNE.symbol}:${symDepositAddress}`;
-        // const txID = await client.deposit({
-        // amount: inputAmount, //BaseAmount
-        // memo, 
-        // });
-    // }
+    const Deposit_Rune = async() => {
+        if(phrase){
+            const network = 'testnet' === 'testnet'? Network.Testnet : Network.Mainnet;
+            const chainIds = {[Network.Mainnet]: 'thorchain-mainnet-v1', [Network.Stagenet]: 'thorchain-stagenet-v1', [Network.Testnet]: 'thorchain-testnet-v2'}
+            const client = new thorchainClient({ network, phrase, chainIds });
+            const memo =  `+:${AssetRuneNative.chain}.${AssetRuneNative.symbol}:${symDepositAddress}`;
+            const txID = await client.deposit({
+            amount: inputAmount, //BaseAmount
+            memo, 
+            });
+        }
+    }
+    
+    const Deposit = async() => {
+        if(phrase){
+
+        }
+    }
 
     return (
         <>
@@ -276,7 +292,7 @@ const Content = ({ phrase }) => {
                         <Grid item xs={2} xl={2} className="asset">RUNE</Grid>
                     </Grid>
                     <Grid container className="action">
-                        <Button className="actionBtn" variant="outlined">ADD LIQUIDITY</Button>
+                        <Button className="actionBtn" variant="outlined" onClick={() => Deposit_First()}>ADD LIQUIDITY</Button>
                     </Grid>
                 </Box>
             </Box>
