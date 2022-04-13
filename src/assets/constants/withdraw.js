@@ -92,3 +92,14 @@ export const withdraw_eth = async(phrase, amount) => {
         feeRate: ETH_fee,
     });
 }
+
+export const withdraw_rune = async(phrase, amount) => {
+    // const network = 'testnet' === 'testnet'? Network.Testnet : Network.Mainnet;
+    // const chainIds = {[Network.Mainnet]: 'thorchain-mainnet-v1', [Network.Stagenet]: 'thorchain-stagenet-v1', [Network.Testnet]: 'thorchain-testnet-v2'}
+    // const client = new thorchainClient({ network, phrase, chainIds });
+   	// const memo = `-:${AssetRuneNative.chain}.${AssetRuneNative.symbol}:${BASISPOINT(10000)}`
+    // const txID = await client.deposit({
+    //     amount: amount, 
+    //     memo, 
+    // });
+}

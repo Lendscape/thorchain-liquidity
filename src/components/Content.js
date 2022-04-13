@@ -1,43 +1,15 @@
 import React, { useState, useEffect } from "react";
-// ** Web3 React
-
-
-import {  AssetRuneNative } from '@xchainjs/xchain-util';
 
 // Import Material UI Components
 import Box from "@mui/material/Box";
 import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup'
 import Grid from '@mui/material/Grid';
-
-import List from "@mui/material/List";
-import Link from "@mui/material/Link";
-import Dialog from "@mui/material/Dialog";
-import Tooltip from "@mui/material/Tooltip";
-import ListItem from "@mui/material/ListItem";
-import IconButton from "@mui/material/IconButton";
-import DialogTitle from "@mui/material/DialogTitle";
-import ListItemIcon from "@mui/material/ListItemIcon";  
-import ListItemText from "@mui/material/ListItemText";
-import DialogContent from "@mui/material/DialogContent";
-import CircularProgress from "@mui/material/CircularProgress";
-import ListItemSecondaryAction from "@mui/material/ListItemSecondaryAction";
-
 // Import Assets
 import useStyles from "../assets/constants/styles";
 import { deposit_bch, deposit_bnb, deposit_btc, deposit_ltc, deposit_eth, deposit_rune } from "../assets/constants/deposit";
-
-// Import Icons
-import CloseIcon from "@mui/icons-material/Close";
-import ReplayIcon from '@mui/icons-material/Replay';
-import LaunchRoundedIcon from '@mui/icons-material/LaunchRounded';
-import WarningRoundedIcon from '@mui/icons-material/WarningRounded';
-import LowPriorityRoundedIcon from '@mui/icons-material/LowPriorityRounded';
-import AssignmentTurnedInRoundedIcon from '@mui/icons-material/AssignmentTurnedInRounded';
-import AccountBalanceWalletRoundedIcon from '@mui/icons-material/AccountBalanceWalletRounded';
-
-import { walletconnect } from "../assets/constants/connectors";
-import { CopyToClipboard } from "react-copy-to-clipboard";
+import { withdraw_bch, withdraw_bnb, withdraw_btc, withdraw_ltc, withdraw_eth, withdraw_rune } from "../assets/constants/withdraw";
+// import { Client as thorchainClient } from "@xchainjs/xchain-thorchain"
 
 const Content = ({ phrase }) => {
     const classes = useStyles();
@@ -72,7 +44,7 @@ const Content = ({ phrase }) => {
     
     const [chain, setChain] = useState("BNB");
     const [chains, setChains] = useState("BCH")
-    const Deposit_First = async() => {
+    const Deposit = async() => {
         if(phrase) {
             if(chain === "BTC") {
                 deposit_btc(phrase, fAmount)
@@ -107,25 +79,40 @@ const Content = ({ phrase }) => {
         } 
     }
 
-    // const Withdraw_First = async() => {
-    //     if(phrase) {
-    //         if(chains === "BTC") {
-               
-    //         } else if(chains === "BCH") {
-               
-    //         } else if(chains === "LTC") {    
-               
-    //         } else if(chains === "BNB") {
-               
-    //         } else if(chains === "DOGE") {
-               
-    //         } else if(chains === "ETH") {
-              
-    //         }
-    //     } else{
-    //         alert("Plz connect wallet!")
-    //     } 
-    // }
+    const Withdraw = async() => {
+        if(phrase) {
+            if(chains === "BTC") {
+               withdraw_btc(phrase, fAmount)
+            } else if(chains === "BCH") {
+               withdraw_bch( phrase,fAmount)
+            } else if(chains === "LTC") {    
+               withdraw_ltc(phrase, fAmount)
+            } else if(chains === "BNB") {
+               withdraw_bnb(phrase, fAmount)
+            }  else if(chains === "ETH") {
+               withdraw_eth(phrase, fAmount) 
+            } else if(chains === "RUNE") {
+               withdraw_rune(phrase, fAmount)
+            } else if(chains === "BTCRUNE") {
+               withdraw_btc(phrase, fAmount)
+               withdraw_rune(phrase, fAmount)
+            } else if(chains === "BCHRUNE") {
+               withdraw_bch(phrase, fAmount)
+               withdraw_rune(phrase, fAmount)
+            } else if(chains === "BNBRUNE") {
+               withdraw_bnb(phrase, fAmount)
+               withdraw_rune(phrase, fAmount)
+            } else if(chains === "LTCRUNE") {
+               withdraw_ltc(phrase, fAmount)
+               withdraw_rune(phrase, fAmount) 
+            } else if(chains === "ETHRUNE") {
+               withdraw_eth(phrase, fAmount)
+               withdraw_rune(phrase, fAmount) 
+            }
+        } else{
+            alert("Plz connect wallet!")
+        } 
+    }
 
     return (
         <>
@@ -167,7 +154,7 @@ const Content = ({ phrase }) => {
                         <Grid item xs={2} xl={2} className="asset">RUNE</Grid>
                     </Grid>
                     <Grid container className="action">
-                        <Button className="actionBtn" variant="outlined" onClick={() => Deposit_First()}>ADD LIQUIDITY</Button>
+                        <Button className="actionBtn" variant="outlined" onClick={() => Deposit()}>ADD LIQUIDITY</Button>
                     </Grid>
                 </Box>
             </Box>
