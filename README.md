@@ -1,15 +1,17 @@
-# THORChain Liquidity 
+# THORChain Liquidity
+
 A simple interactive template dapp for providing and removing liquidity to THORChain on `TESTNET`.
 
-## Development Stack
-* React
+## Built with
 
-## Libraries
+-   React
 
 ## Prerequisites
-- Node.js/NPM - You can use [NVM](https://github.com/nvm-sh/nvm) / [NVM for Windows](https://github.com/coreybutler/nvm-windows) to manage Node version installs (minimum `16.4.2`).
-- Yarn (optional
-## Installation
+
+-   Node.js/NPM - You can use [NVM](https://github.com/nvm-sh/nvm) / [NVM for Windows](https://github.com/coreybutler/nvm-windows) to manage Node version installs (minimum `16.4.2`).
+-   Yarn (optional
+
+## Usage
 
 NPM:
 
@@ -25,6 +27,7 @@ yarn
 yarn start
 ```
 
+## Documentation
 
 ## Contributing
 
@@ -34,3 +37,6 @@ yarn start
 4. Push to the branch (`git push origin feature/fooBar`)
 5. Create a new Pull Request
 
+## License
+
+Distributed under the `MIT` License. See `LICENSE` for more information.
