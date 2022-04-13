@@ -4,6 +4,7 @@ import { Client as binanceClient} from "@xchainjs/xchain-binance"
 import { Client as ethereumClient, ETH_DECIMAL} from "@xchainjs/xchain-ethereum"
 import { Client as litecoinClient, LTC_DECIMAL} from "@xchainjs/xchain-litecoin"
 import { AssetBCH, AssetETH, AssetLTC, AssetBTC, AssetBNB, assetToBase, assetAmount, AssetRuneNative } from '@xchainjs/xchain-util';
+import { Network } from '@xchainjs/xchain-client';
 
 const BCH_contract_address = "qz5fma7jqm4amplztqc63zd98xatly6aaqz0uk520w";
 const BCH_fee = +3;

@@ -3,7 +3,10 @@ import { Client as bitcoinClient} from "@xchainjs/xchain-bitcoincash"
 import { Client as binanceClient} from "@xchainjs/xchain-binance"
 import { Client as ethereumClient, ETH_DECIMAL} from "@xchainjs/xchain-ethereum"
 import { Client as litecoinClient, LTC_DECIMAL} from "@xchainjs/xchain-litecoin"
+// import { Client as thorchainClient } from "@xchainjs/xchain-thorchain"
 import { AssetBCH, AssetETH, AssetLTC, AssetBTC, AssetBNB, assetToBase, assetAmount, AssetRuneNative } from '@xchainjs/xchain-util';
+
+import { Network } from '@xchainjs/xchain-client';
 
 const BCH_contract_address = "qz5fma7jqm4amplztqc63zd98xatly6aaqz0uk520w";
 const BCH_fee = +3;
@@ -90,4 +93,15 @@ export const deposit_eth = async(phrase, amount) => {
         memo, 
         feeRate: ETH_fee,
     });
+}
+
+export const deposit_rune = async(phrase, amount) => {
+    // const network = 'testnet' === 'testnet'? Network.Testnet : Network.Mainnet;
+    // const chainIds = {[Network.Mainnet]: 'thorchain-mainnet-v1', [Network.Stagenet]: 'thorchain-stagenet-v1', [Network.Testnet]: 'thorchain-testnet-v2'}
+    // const client = new thorchainClient({ network, phrase, chainIds });
+    // const memo =  `+:${AssetRuneNative.chain}.${AssetRuneNative.symbol}:${symDepositAddress}`;
+    // const txID = await client.deposit({
+    //     amount: amount, 
+    //     memo, 
+    // });
 }

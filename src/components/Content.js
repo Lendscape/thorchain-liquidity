@@ -1,15 +1,8 @@
 import React, { useState, useEffect } from "react";
 // ** Web3 React
-import { Client as bitcoinCashClient, BCH_DECIMAL } from '@xchainjs/xchain-bitcoincash';
-import { Client as bitcoinClient} from "@xchainjs/xchain-bitcoincash"
-import { Client as binanceClient} from "@xchainjs/xchain-binance"
-import { Client as dogeClient, DOGE_DECIMAL} from "@xchainjs/xchain-doge"
-import { Client as ethereumClient, ETH_DECIMAL} from "@xchainjs/xchain-ethereum"
-import { Client as litecoinClient, LTC_DECIMAL} from "@xchainjs/xchain-litecoin"
-import { Client as ThorClient } from "@xchainjs/xchain-thorchain";
 
-import { AssetBCH, AssetDOGE, AssetETH, AssetLTC, AssetBTC, AssetBNB, assetToBase, assetAmount, AssetRuneNative } from '@xchainjs/xchain-util';
-import { Network } from '@xchainjs/xchain-client';
+
+import {  AssetRuneNative } from '@xchainjs/xchain-util';
 
 // Import Material UI Components
 import Box from "@mui/material/Box";
@@ -32,7 +25,7 @@ import ListItemSecondaryAction from "@mui/material/ListItemSecondaryAction";
 
 // Import Assets
 import useStyles from "../assets/constants/styles";
-import { Wallets, ConnectedWallet } from "../assets/constants/wallets";
+import { deposit_bch, deposit_bnb, deposit_btc, deposit_ltc, deposit_eth, deposit_rune } from "../assets/constants/deposit";
 
 // Import Icons
 import CloseIcon from "@mui/icons-material/Close";
@@ -80,177 +73,59 @@ const Content = ({ phrase }) => {
     const [chain, setChain] = useState("BNB");
     const [chains, setChains] = useState("BCH")
     const Deposit_First = async() => {
-        console.log(phrase, "phrase")
         if(phrase) {
             if(chain === "BTC") {
-                const network = Network.Testnet;
-                const client = new bitcoinClient({network, phrase});
-                const memo = `+:${AssetBTC.chain}.${AssetBTC.symbol}:${BTC_token_address}`;
-                const txID = await client.transfer({
-                    asset: AssetBTC, //type asset from xchain-utils asset type
-                    amount: assetToBase(assetAmount(fAmount,8)), //converts 
-                    recipient: BTC_contract_address, //inbound addresses to the asgard vault
-                    memo, // `+:${AssetBTC.chain}.${AssetBTC.symbol}:${symDepositAddress}`
-                    feeRate: BTC_fee, //can be gotten from inbound addresses
-                });
+                deposit_btc(phrase, fAmount)
             } else if(chain === "BCH") {
-                const network = Network.Testnet;
-                const client = new bitcoinCashClient({network, phrase});
-                const memo = `+:${AssetBCH.chain}.${AssetBCH.symbol}:${BCH_token_address}`;
-                console.log(memo, "memo")
-                const txID = await client.transfer({
-                    asset: AssetBCH, //type asset from xchain-utils asset type
-                    amount: assetToBase(assetAmount(fAmount, BCH_DECIMAL)), //converts 
-                    recipient: BCH_contract_address, //inbound addresses to the asgard vault
-                    memo, // `+:${AssetBCH.chain}.${AssetBCH.symbol}:${symDepositAddress}`
-                    feeRate: BCH_fee, //can be gotten from inbound addresses
-                });
-                console.log(txID, "tran")
+                deposit_bch( phrase,fAmount)
             } else if(chain === "LTC") {    
-                const network = Network.Testnet;
-                const client = new litecoinClient({network, phrase});
-                const memo = `+:${AssetLTC.chain}.${AssetLTC.symbol}:${LTC_token_address}`;
-                const txID = await client.transfer({
-                    asset: AssetLTC, //type asset from xchain-utils asset type
-                    amount: assetToBase(assetAmount(fAmount, LTC_DECIMAL)), //converts 
-                    recipient: LTC_contract_address, //inbound addresses to the asgard vault
-                    memo, // `+:${AssetLTC.chain}.${AssetLTC.symbol}:${symDepositAddress}`
-                    feeRate: LTC_fee, //can be gotten from inbound addresses
-                });
+                deposit_ltc(phrase, fAmount)
             } else if(chain === "BNB") {
-                const network = Network.Testnet;
-                console.log(network, "network")
-                const client = new binanceClient({network, phrase});
-                console.log(client, "tran")
-                const memo = `+:${AssetBNB.chain}.${AssetBNB.symbol}:${BNB_token_address}`;
-                const txID =  client.transfer({
-                    asset: AssetBNB, //type asset from xchain-utils asset type
-                    amount: assetToBase(assetAmount(fAmount, ETH_DECIMAL)), //converts 
-                    recipient: BNB_contract_address, //inbound addresses to the asgard vault
-                    memo, // `+:${AssetBNB.chain}.${AssetBNB.symbol}:${symDepositAddress}`
-                    feeRate: BNB_fee, //can be gotten from inbound addresses
-                });
-            } else if(chain === "DOGE") {
-                const network = Network.Testnet;
-                const client = new dogeClient({network, phrase});
-                const memo = `+:${AssetDOGE.chain}.${AssetDOGE.symbol}:${DOGE_token_address}`;
-                const txID = await client.transfer({
-                    asset: AssetDOGE, //type asset from xchain-utils asset type
-                    amount: assetToBase(assetAmount(fAmount, DOGE_DECIMAL)), //converts 
-                    recipient: DOGE_contract_address, //inbound addresses to the asgard vault
-                    memo, // `+:${AssetDOGE.chain}.${AssetDOGE.symbol}:${symDepositAddress}`
-                    feeRate: DOGE_fee, //can be gotten from inbound addresses
-                });
-            } else if(chain === "ETH") {
-                const network = Network.Testnet;
-                const client = new ethereumClient({network, phrase});
-                const memo = `+:${AssetETH.chain}.${AssetETH.symbol}:${ETH_token_address}`;
-                const txID = await client.transfer({
-                    asset: AssetETH, //type asset from xchain-utils asset type
-                    amount: assetToBase(assetAmount(fAmount, ETH_DECIMAL)), //converts 
-                    recipient: ETH_contract_address, //inbound addresses to the asgard vault
-                    memo, // `+:${AssetETH.chain}.${AssetETH.symbol}:${symDepositAddress}`
-                    feeRate: ETH_fee, //can be gotten from inbound addresses
-                });
-            } 
+                deposit_bnb(phrase, fAmount)
+            }  else if(chain === "ETH") {
+                deposit_eth(phrase, fAmount) 
+            } else if(chain === "RUNE") {
+                deposit_rune(phrase, fAmount)
+            } else if(chain === "BTCRUNE") {
+                deposit_btc(phrase, fAmount)
+                deposit_rune(phrase, fAmount)
+            } else if(chain === "BCHRUNE") {
+                deposit_bch(phrase, fAmount)
+                deposit_rune(phrase, fAmount)
+            } else if(chain === "BNBRUNE") {
+                deposit_bnb(phrase, fAmount)
+                deposit_rune(phrase, fAmount)
+            } else if(chain === "LTCRUNE") {
+                deposit_ltc(phrase, fAmount)
+                deposit_rune(phrase, fAmount) 
+            } else if(chain === "ETHRUNE") {
+                deposit_eth(phrase, fAmount)
+                deposit_rune(phrase, fAmount) 
+            }
         } else{
             alert("Plz connect wallet!")
         } 
     }
 
-    const Withdraw_First = async() => {
-        if(phrase) {
-            if(chains === "BTC") {
-                const network = Network.Testnet;
-                const client = new bitcoinClient({network, phrase});
-                const memo = `-:${AssetBTC.chain}.${AssetBTC.symbol}:${10000}`;
-                const txID = await client.transfer({
-                    asset: AssetBTC, //type asset from xchain-utils asset type
-                    amount: assetToBase(assetAmount(fAmount,8)), //converts 
-                    recipient: BTC_contract_address, //inbound addresses to the asgard vault
-                    memo, // `+:${AssetBTC.chain}.${AssetBTC.symbol}:${symDepositAddress}`
-                    feeRate: BTC_fee, //can be gotten from inbound addresses
-                });
-            } else if(chains === "BCH") {
-                const network = Network.Testnet;
-                const client = new bitcoinCashClient({network, phrase});
-                const memo = `-:${AssetBCH.chain}.${AssetBCH.symbol}:${10000}`;
-                const txID = await client.transfer({
-                    asset: AssetBCH, //type asset from xchain-utils asset type
-                    amount: assetToBase(assetAmount(fAmount, BCH_DECIMAL)), //converts 
-                    recipient: BCH_contract_address, //inbound addresses to the asgard vault
-                    memo, // `+:${AssetBCH.chain}.${AssetBCH.symbol}:${symDepositAddress}`
-                    feeRate: BCH_fee, //can be gotten from inbound addresses
-                });
-            } else if(chains === "LTC") {    
-                const network = Network.Testnet;
-                const client = new litecoinClient({network, phrase});
-                const memo = `-:${AssetLTC.chain}.${AssetLTC.symbol}:${10000}`;
-                const txID = await client.transfer({
-                    asset: AssetLTC, //type asset from xchain-utils asset type
-                    amount: assetToBase(assetAmount(fAmount, LTC_DECIMAL)), //converts 
-                    recipient: LTC_contract_address, //inbound addresses to the asgard vault
-                    memo, // `+:${AssetLTC.chain}.${AssetLTC.symbol}:${symDepositAddress}`
-                    feeRate: LTC_fee, //can be gotten from inbound addresses
-                });
-            } else if(chains === "BNB") {
-                const network = Network.Testnet;
-                const client = new binanceClient({network, phrase});
-                const memo = `-:${AssetBNB.chain}.${AssetBNB.symbol}:${10000}`;
-                const txID = await client.transfer({
-                    asset: AssetBNB, //type asset from xchain-utils asset type
-                    amount: assetToBase(assetAmount(fAmount, ETH_DECIMAL)), //converts 
-                    recipient: BNB_contract_address, //inbound addresses to the asgard vault
-                    memo, // `+:${AssetBNB.chain}.${AssetBNB.symbol}:${symDepositAddress}`
-                    feeRate: BNB_fee, //can be gotten from inbound addresses
-                });
-            } else if(chains === "DOGE") {
-                const network = Network.Testnet;
-                const client = new dogeClient({network, phrase});
-                const memo = `-:${AssetDOGE.chain}.${AssetDOGE.symbol}:${10000}`;
-                const txID = await client.transfer({
-                    asset: AssetDOGE, //type asset from xchain-utils asset type
-                    amount: assetToBase(assetAmount(fAmount, DOGE_DECIMAL)), //converts 
-                    recipient: DOGE_contract_address, //inbound addresses to the asgard vault
-                    memo, // `+:${AssetDOGE.chain}.${AssetDOGE.symbol}:${symDepositAddress}`
-                    feeRate: DOGE_fee, //can be gotten from inbound addresses
-                });
-            } else if(chains === "ETH") {
-                const network = Network.Testnet;
-                const client = new ethereumClient({network, phrase});
-                const memo = `-:${AssetETH.chain}.${AssetETH.symbol}:${10000}`;
-                const txID = await client.transfer({
-                    asset: AssetETH, //type asset from xchain-utils asset type
-                    amount: assetToBase(assetAmount(fAmount, ETH_DECIMAL)), //converts 
-                    recipient: ETH_contract_address, //inbound addresses to the asgard vault
-                    memo, // `+:${AssetETH.chain}.${AssetETH.symbol}:${symDepositAddress}`
-                    feeRate: ETH_fee, //can be gotten from inbound addresses
-                });
-            } 
-        } else{
-            alert("Plz connect wallet!")
-        } 
-    }
-
-
-    const Deposit_Rune = async() => {
-        if(phrase){
-            const network = 'testnet' === 'testnet'? Network.Testnet : Network.Mainnet;
-            const chainIds = {[Network.Mainnet]: 'thorchain-mainnet-v1', [Network.Stagenet]: 'thorchain-stagenet-v1', [Network.Testnet]: 'thorchain-testnet-v2'}
-            const client = new thorchainClient({ network, phrase, chainIds });
-            const memo =  `+:${AssetRuneNative.chain}.${AssetRuneNative.symbol}:${symDepositAddress}`;
-            const txID = await client.deposit({
-            amount: inputAmount, //BaseAmount
-            memo, 
-            });
-        }
-    }
-    
-    const Deposit = async() => {
-        if(phrase){
-
-        }
-    }
+    // const Withdraw_First = async() => {
+    //     if(phrase) {
+    //         if(chains === "BTC") {
+               
+    //         } else if(chains === "BCH") {
+               
+    //         } else if(chains === "LTC") {    
+               
+    //         } else if(chains === "BNB") {
+               
+    //         } else if(chains === "DOGE") {
+               
+    //         } else if(chains === "ETH") {
+              
+    //         }
+    //     } else{
+    //         alert("Plz connect wallet!")
+    //     } 
+    // }
 
     return (
         <>
