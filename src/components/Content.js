@@ -245,12 +245,12 @@ const Content = ({ phrase }) => {
             <Box id="content" className={classes.Content}>
                 <Box className="content-box">
                     <Grid container className="content-header">
-                        <IconButton onClick={() => setpagetype('deposit')}>
-                            <InputIcon />
-                        </IconButton>
-                        <IconButton onClick={() => setpagetype('withdraw')}>
-                            <OutputIcon />
-                        </IconButton>
+                        <Button variant="outlined" onClick={() => setpagetype('deposit')}>
+                            DEPOSIT
+                        </Button>
+                        <Button onClick={() => setpagetype('withdraw')}>
+                            WITHDRAW
+                        </Button>
                     </Grid>
                     <Grid container className="token-type">
                             {
@@ -314,14 +314,14 @@ const Content = ({ phrase }) => {
             </Box>:
             <Box id="content" className={classes.Content}>
             <Box className="content-box">
-                <Grid container className="content-header">
-                    <IconButton>
-                        <InputIcon onClick={() => setpagetype("deposit")} />
-                    </IconButton>
-                    <IconButton onClick={()=> setpagetype("withdraw")}>
-                        <OutputIcon />
-                    </IconButton>
-                </Grid>
+            <Grid container className="content-header">
+                <Button  onClick={() => setpagetype('deposit')}>
+                    DEPOSIT
+                </Button>
+                <Button variant="outlined" onClick={() => setpagetype('withdraw')}>
+                    WITHDRAW
+                </Button>
+            </Grid>
                {
                    RUNEList?
                    <Grid>

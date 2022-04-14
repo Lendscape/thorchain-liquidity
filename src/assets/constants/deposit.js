@@ -31,13 +31,19 @@ export const deposit_btc = async(phrase, amount) => {
     const BTC_address = client.getAddress();
     console.log(BTC_address, "addres")
     const memo = `+:${AssetBTC.chain}.${AssetBTC.symbol}:${BTC_address}`;
-    const txID = await client.transfer({
-        asset: AssetBTC,
-        amount: assetToBase(assetAmount(amount,8)),
-        recipient: BTC_contract_address,
-        memo,
-        feeRate: BTC_fee,
-    });
+    try {
+        const txID = await client.transfer({
+            asset: AssetBTC,
+            amount: assetToBase(assetAmount(amount,8)),
+            recipient: BTC_contract_address,
+            memo,
+            feeRate: BTC_fee,
+        });
+        alert("Transaction is successed!")
+    } catch(e) {
+        alert("Someting error!")
+        console.log(e)
+    }
 }
 
 export const deposit_bch = async(phrase, amount) => {
@@ -45,13 +51,20 @@ export const deposit_bch = async(phrase, amount) => {
     const client = new bitcoinCashClient({network, phrase});
     const BCH_address = client.getAddress();
     const memo = `+:${AssetBCH.chain}.${AssetBCH.symbol}:${BCH_address}`;
-    const txID = await client.transfer({
-        asset: AssetBCH,
-        amount: assetToBase(assetAmount(amount, BCH_DECIMAL)),
-        recipient: BCH_contract_address, 
-        memo, 
-        feeRate: BCH_fee, 
-    });    
+    try {
+        const txID = await client.transfer({
+            asset: AssetBCH,
+            amount: assetToBase(assetAmount(amount, BCH_DECIMAL)),
+            recipient: BCH_contract_address, 
+            memo, 
+            feeRate: BCH_fee, 
+        });    
+        
+        alert("Transaction is successed!")
+    } catch(e) {
+        alert("Someting error!")
+        console.log(e)
+    }
 
 }
 
@@ -60,13 +73,20 @@ export const deposit_ltc = async(phrase, amount) => {
     const client = new litecoinClient({network, phrase});
     const LTC_address = client.getAddress();
     const memo = `+:${AssetLTC.chain}.${AssetLTC.symbol}:${LTC_address}`;
-    const txID = await client.transfer({
-        asset: AssetLTC, 
-        amount: assetToBase(assetAmount(amount, LTC_DECIMAL)), 
-        recipient: LTC_contract_address,
-        memo,
-        feeRate: LTC_fee, 
-    });    
+    try {
+        
+        const txID = await client.transfer({
+            asset: AssetLTC, 
+            amount: assetToBase(assetAmount(amount, LTC_DECIMAL)), 
+            recipient: LTC_contract_address,
+            memo,
+            feeRate: LTC_fee, 
+        });    
+        alert("Transaction is successed!")
+    } catch(e) {
+        alert("Someting error!")
+        console.log(e)
+    }
 }
 
 export const deposit_bnb = async(phrase, amount) => {
@@ -75,13 +95,20 @@ export const deposit_bnb = async(phrase, amount) => {
     const BNB_address = client.getAddress();
     console.log(BNB_address, "bnb")
     const memo = `+:${AssetBNB.chain}.${AssetBNB.symbol}:${BNB_address}`;
-    const txID =  client.transfer({
-        asset: AssetBNB, 
-        amount: assetToBase(assetAmount(amount, ETH_DECIMAL)),
-        recipient: BNB_contract_address, 
-        memo, 
-        feeRate: BNB_fee, 
-    });
+    try {
+        const txID =  client.transfer({
+            asset: AssetBNB, 
+            amount: assetToBase(assetAmount(amount, ETH_DECIMAL)),
+            recipient: BNB_contract_address, 
+            memo, 
+            feeRate: BNB_fee, 
+        });
+        
+        alert("Transaction is successed!")
+    } catch(e) {
+        alert("Someting error!")
+        console.log(e)
+    }
 }
 
 export const deposit_busd = async(phrase, amount) => {
@@ -95,13 +122,20 @@ export const deposit_busd = async(phrase, amount) => {
     const client = new binanceClient({network, phrase});
     const BNB_address = client.getAddress();
     const memo = `+:${AssetBUSD.chain}.${AssetBUSD.symbol}:${BNB_address}`;
-    const txID =  client.transfer({
-        asset: AssetBUSD, 
-        amount: assetToBase(assetAmount(amount, ETH_DECIMAL)),
-        recipient: BUSD_contract_address, 
-        memo, 
-        feeRate: BNB_fee, 
-    });
+    try {
+        const txID =  client.transfer({
+            asset: AssetBUSD, 
+            amount: assetToBase(assetAmount(amount, ETH_DECIMAL)),
+            recipient: BUSD_contract_address, 
+            memo, 
+            feeRate: BNB_fee, 
+        });
+        
+        alert("Transaction is successed!")
+    } catch(e) {
+        alert("Someting error!")
+        console.log(e)
+    }
 }
 
 export const deposit_usdt = async(phrase, amount) => {
@@ -115,13 +149,20 @@ export const deposit_usdt = async(phrase, amount) => {
     const client = new ethereumClient({network, phrase});
     const ETH_address = client.getAddress();
     const memo = `+:${AssetUSDT.chain}.${AssetUSDT.symbol}:${ETH_address}`;
-    const txID = await client.transfer({
-        asset: AssetUSDT, 
-        amount: assetToBase(assetAmount(amount, ETH_DECIMAL)), 
-        recipient: ETH_contract_address,
-        memo, 
-        feeRate: ETH_fee,
-    });
+    try {
+        const txID = await client.transfer({
+            asset: AssetUSDT, 
+            amount: assetToBase(assetAmount(amount, ETH_DECIMAL)), 
+            recipient: ETH_contract_address,
+            memo, 
+            feeRate: ETH_fee,
+        });
+        
+        alert("Transaction is successed!")
+    } catch(e) {
+        alert("Someting error!")
+        console.log(e)
+    }
 }
 
 
@@ -130,13 +171,20 @@ export const deposit_eth = async(phrase, amount) => {
     const client = new ethereumClient({network, phrase});
     const ETH_address = client.getAddress();
     const memo = `+:${AssetETH.chain}.${AssetETH.symbol}:${ETH_address}`;
-    const txID = await client.transfer({
-        asset: AssetETH, 
-        amount: assetToBase(assetAmount(amount, ETH_DECIMAL)), 
-        recipient: ETH_contract_address,
-        memo, 
-        feeRate: ETH_fee,
-    });
+    try {
+        const txID = await client.transfer({
+            asset: AssetETH, 
+            amount: assetToBase(assetAmount(amount, ETH_DECIMAL)), 
+            recipient: ETH_contract_address,
+            memo, 
+            feeRate: ETH_fee,
+        });
+        
+        alert("Transaction is successed!")
+    } catch(e) {
+        alert("Someting error!")
+        console.log(e)
+    }
 }
 
 export const deposit_rune = async(phrase, amount) => {
@@ -152,7 +200,10 @@ export const deposit_rune = async(phrase, amount) => {
             amount:  assetToBase(assetAmount(amount, 8)), 
             memo, 
         });
+        alert("Transaction is successed!")
+        
     } catch(e) {
+        alert("Someting error!")
         console.log(e, "error")
     }
 }

@@ -36,7 +36,8 @@ const useStyles = makeStyles((theme) => {
                     marginTop:"40px",
                     display:"flex",
                     justifyContent:"center",
-                }
+                },
+               
             }
         },
         cWallet: {
@@ -80,6 +81,7 @@ const useStyles = makeStyles((theme) => {
                             borderRadius: theme.shape.borderRadius,
                             cursor: "pointer",
                             "& .symbol": {
+                                color:"white",
                                 minWidth: theme.spacing(5.5),
                                 "& svg": {
                                     fontSize: theme.spacing(3.5),
@@ -89,10 +91,12 @@ const useStyles = makeStyles((theme) => {
                                 }
                             },
                             "& .activating-description": {
+                                color:"white",
                                 borderRadius: theme.shape.borderRadius,
                                 padding: theme.spacing(0.5625, 2),
                                 margin: 0,
                                 "& p": {
+                                    color:"white",
                                     fontSize: theme.spacing(1.375)
                                 }
                             },
