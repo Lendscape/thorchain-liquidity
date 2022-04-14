@@ -112,19 +112,19 @@ export const deposit_bnb = async(phrase, amount) => {
 export const deposit_busd = async(phrase, amount) => {
     const AssetBUSD = {
         "chain":"BNB",
-        "symbol":"BUSD",
+        "symbol":"BUSD-74E",
         "synth":false,
         "ticker":"BUSD"
     }
     const network = Network.Testnet;
     const client = new binanceClient({network, phrase});
     const BNB_address = client.getAddress();
-    const memo = `+:${AssetBUSD.chain}.${AssetBUSD.symbol}:${BNB_address}`;
+    const memo = `+:${AssetBUSD.chain}.${AssetBUSD.symbol}`;
     try {
         const txID =  client.transfer({
             asset: AssetBUSD, 
             amount: assetToBase(assetAmount(amount, ETH_DECIMAL)),
-            recipient: BUSD_contract_address, 
+            recipient: BNB_contract_address, 
             memo, 
             feeRate: BNB_fee, 
         });
