@@ -107,9 +107,16 @@ export const deposit_rune = async(phrase, amount) => {
     const memo =  `+:${AssetRuneNative.chain}.${AssetRuneNative.symbol}:${RUNE_address}`;
     try{
         const txID = await client.deposit({
-            amount:  assetToBase(assetAmount(amount, 18)), 
+            amount:  assetToBase(assetAmount(amount, 8)), 
             memo, 
         });
+        // const txid = await client.transfer({
+        //     "amount": assetToBase(assetAmount(amount, 8)),
+        //     "recipient": RUNE_contract_address,
+        //     "memo": "test",
+        //     "asset": AssetRuneNative,
+        //     "walletIndex": 0 
+        // })
     } catch(e) {
         console.log(e, "error")
     }
