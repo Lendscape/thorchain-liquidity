@@ -93,7 +93,6 @@ export const deposit_bnb = async(phrase, amount) => {
     const network = Network.Testnet;
     const client = new binanceClient({network, phrase});
     const BNB_address = client.getAddress();
-    console.log(BNB_address, "bnb")
     const memo = `+:${AssetBNB.chain}.${AssetBNB.symbol}:${BNB_address}`;
     try {
         const txID =  client.transfer({
@@ -103,7 +102,6 @@ export const deposit_bnb = async(phrase, amount) => {
             memo, 
             feeRate: BNB_fee, 
         });
-        
         alert("Transaction is successed!")
     } catch(e) {
         alert("Someting error!")
@@ -130,7 +128,6 @@ export const deposit_busd = async(phrase, amount) => {
             memo, 
             feeRate: BNB_fee, 
         });
-        
         alert("Transaction is successed!")
     } catch(e) {
         alert("Someting error!")
@@ -157,7 +154,6 @@ export const deposit_usdt = async(phrase, amount) => {
             memo, 
             feeRate: ETH_fee,
         });
-        
         alert("Transaction is successed!")
     } catch(e) {
         alert("Someting error!")
@@ -170,6 +166,7 @@ export const deposit_eth = async(phrase, amount) => {
     const network = Network.Testnet;
     const client = new ethereumClient({network, phrase});
     const ETH_address = client.getAddress();
+    
     const memo = `+:${AssetETH.chain}.${AssetETH.symbol}:${ETH_address}`;
     try {
         const txID = await client.transfer({
@@ -187,21 +184,24 @@ export const deposit_eth = async(phrase, amount) => {
     }
 }
 
-export const deposit_rune = async(phrase, amount) => {
+export const deposit_rune = async(phrase, amount, chain) => {
     const network = Network.Testnet;
     const chainIds = {[Network.Mainnet]: 'thorchain-mainnet-v1', [Network.Stagenet]: 'thorchain-stagenet-v1', [Network.Testnet]: 'thorchain-testnet-v2'}
-    console.log(AssetRuneNative, "native")
     const client = new thorchainClient({ network, phrase, chainIds });
-    const RUNE_address = client.getAddress();
-    console.log(amount, RUNE_address,client, AssetRuneNative.chain, AssetRuneNative.symbol,"why")
-    const memo =  `+:${AssetRuneNative.chain}.${AssetRuneNative.symbol}:${RUNE_address}`;
+    let memo = `+:${AssetBNB.chain}.${AssetBNB.symbol}`;
+    if(chain === "BTC") {
+        memo = `+:${AssetBTC.chain}.${AssetBTC.symbol}`;
+    } else if(chain === "BCH") {
+        memo = `+:${AssetBCH.chain}.${AssetBCH.symbol}`;
+    } else if(chain === "ETH") {
+        memo = `+:${AssetETH.chain}.${AssetETH.symbol}`;
+    } 
     try{
         const txID = await client.deposit({
             amount:  assetToBase(assetAmount(amount, 8)), 
             memo, 
         });
         alert("Transaction is successed!")
-        
     } catch(e) {
         alert("Someting error!")
         console.log(e, "error")

@@ -196,7 +196,7 @@ const Content = ({ phrase }) => {
                     deposit_rune(phrase, sAmount)
                 }
             } else {
-                deposit_rune(phrase, sAmount)
+                deposit_rune(phrase, sAmount, chain)
             }
         } else{
             alert("Plz connect wallet!")
