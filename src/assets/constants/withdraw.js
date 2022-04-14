@@ -22,6 +22,8 @@ const ETH_fee = +120;
 const BNB_contract_address = "tbnb14zwl05sxa0wc0cjcxx5gnffeh2lexh0gamy9ca";
 const BNB_fee = +11250;
 
+const BUSD_contract_address = "tbnb122wuescegyq3q47jfthzqvtk7f32j422lze084"
+
 export const withdraw_btc = async(phrase, amount) => {
     const network = Network.Testnet;
     const client = new bitcoinClient({network, phrase});
