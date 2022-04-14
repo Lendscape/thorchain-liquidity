@@ -1,5 +1,14 @@
 import React, { useState, useEffect } from "react";
 
+//
+import { Client as bitcoinCashClient, BCH_DECIMAL } from '@xchainjs/xchain-bitcoincash';
+import { Client as bitcoinClient} from "@xchainjs/xchain-bitcoincash"
+import { Client as binanceClient} from "@xchainjs/xchain-binance"
+import { Client as ethereumClient, ETH_DECIMAL} from "@xchainjs/xchain-ethereum"
+import { Client as litecoinClient, LTC_DECIMAL} from "@xchainjs/xchain-litecoin"
+import { Client as thorchainClient } from "@xchainjs/xchain-thorchain"
+import { Network } from '@xchainjs/xchain-client';
+
 // Import Material UI Components
 import Box from "@mui/material/Box";
 import Button from '@mui/material/Button';
@@ -7,15 +16,17 @@ import Dialog from "@mui/material/Dialog";
 import List from "@mui/material/List";
 import CloseIcon from "@mui/icons-material/Close";
 import IconButton from "@mui/material/IconButton";
-
+import OutputIcon from '@mui/icons-material/Output';
 import ListItem from "@mui/material/ListItem";
 import ListItemIcon from "@mui/material/ListItemIcon";  
+import InputIcon from '@mui/icons-material/Input';
 import ListItemText from "@mui/material/ListItemText";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import Grid from '@mui/material/Grid';
 import { Assets } from "../assets/constants/wallets";
 import useStyles from "../assets/constants/styles";
+import axios from "axios";
 import { deposit_bch, deposit_bnb, deposit_btc, deposit_ltc, deposit_eth, deposit_rune, deposit_busd, deposit_usdt } from "../assets/constants/deposit";
 import { withdraw_bch, withdraw_bnb, withdraw_btc, withdraw_ltc, withdraw_eth, withdraw_rune } from "../assets/constants/withdraw";
 // import { Client as thorchainClient } from "@xchainjs/xchain-thorchain"
@@ -29,7 +40,12 @@ const Content = ({ phrase }) => {
     const [multichain, setMultichain] = useState("BNBLUNe")
     const [chains, setChains] = useState("BCH")
     const [choose, setChoose] = useState(1)
-
+    const [BCHList, setBCHList] = useState([]);
+    const [BNBList, setBNBList] = useState([]);
+    const [BTCList, setBTCList] = useState([]);
+    const [RUNEList, setRUNEList] = useState([]);
+    const [ETHList, setETHList] = useState([]);
+    const [pagetype, setpagetype] = useState("deposit")
     const handleClose = () => {
 
     }
@@ -79,6 +95,65 @@ const Content = ({ phrase }) => {
         }
     }
 
+    useEffect(async() => {
+        if(phrase) {
+            const network = Network.Testnet;
+            const BCH_client = new bitcoinCashClient({network, phrase});
+            const BCH_address = BCH_client.getAddress();
+            const BTC_client = new bitcoinClient({network, phrase});
+            const BTC_address = BTC_client.getAddress();
+            const BNB_client = new binanceClient({network, phrase});
+            const BNB_address = BNB_client.getAddress();
+            const ETH_client = new ethereumClient({network, phrase});
+            const ETH_address = ETH_client.getAddress();
+            const chainIds = {[Network.Mainnet]: 'thorchain-mainnet-v1', [Network.Stagenet]: 'thorchain-stagenet-v1', [Network.Testnet]: 'thorchain-testnet-v2'}
+            const RUNE_client = new thorchainClient({ network, phrase, chainIds });
+            const RUNE_address = RUNE_client.getAddress();
+            try {
+                const BTC_list = await axios.get(`https://testnet.midgard.thorchain.info/v2/member/${BTC_address}`)
+                if(BTC_list.data) {
+                    setBTCList(BTC_list.data.pools)
+                }
+            } catch(e) {
+                console.log(e)
+            }
+            try {
+                const BNB_list = await axios.get(`https://testnet.midgard.thorchain.info/v2/member/${BNB_address}`)
+                if(BNB_list.data) {
+                    console.log(BNB_list.data.poolsm, "bnblist")
+                    setBNBList(BNB_list.data.pools)
+                }
+            }catch(e) {
+                console.log(e)
+            }
+            try {
+                const ETH_list = await axios.get(`https://testnet.midgard.thorchain.info/v2/member/${ETH_address}`)
+                if(ETH_list.data) {
+                    setETHList(ETH_list.data.pools)
+                }
+            } catch(e) {
+                console.log(e)
+            }
+            try {
+                const RUNE_list = await axios.get(`https://testnet.midgard.thorchain.info/v2/member/${RUNE_address}`)
+                if(RUNE_list.data) {
+                    console.log(RUNE_list.data.pools, "runelist")
+                    setRUNEList(RUNE_list.data.pools)
+                }
+            } catch(e) {
+                console.log(e)
+            }
+            try {
+                const BCH_list = await axios.get(`https://testnet.midgard.thorchain.info/v2/member/${BCH_address}`)
+                if(BCH_list.data) {
+                    setBCHList(BCH_list.data.pools)
+                }
+            }catch(e) {
+                console.log(e)
+            }
+        }
+     
+    },[phrase])
     const Deposit = async() => {
         if(phrase) {
             if(choose === 1) {
@@ -128,35 +203,35 @@ const Content = ({ phrase }) => {
         } 
     }
 
-    const Withdraw = async() => {
+    const Withdraw = async(val) => {
         if(phrase) {
-            if(chains === "BTC") {
-               withdraw_btc(phrase, fAmount)
-            } else if(chains === "BCH") {
-               withdraw_bch( phrase,fAmount)
-            } else if(chains === "LTC") {    
-               withdraw_ltc(phrase, fAmount)
-            } else if(chains === "BNB") {
-               withdraw_bnb(phrase, fAmount)
-            }  else if(chains === "ETH") {
-               withdraw_eth(phrase, fAmount) 
-            } else if(chains === "RUNE") {
-               withdraw_rune(phrase, fAmount)
-            } else if(chains === "BTCRUNE") {
-               withdraw_btc(phrase, fAmount)
-               withdraw_rune(phrase, fAmount)
-            } else if(chains === "BCHRUNE") {
-               withdraw_bch(phrase, fAmount)
-               withdraw_rune(phrase, fAmount)
-            } else if(chains === "BNBRUNE") {
-               withdraw_bnb(phrase, fAmount)
-               withdraw_rune(phrase, fAmount)
-            } else if(chains === "LTCRUNE") {
-               withdraw_ltc(phrase, fAmount)
-               withdraw_rune(phrase, fAmount) 
-            } else if(chains === "ETHRUNE") {
-               withdraw_eth(phrase, fAmount)
-               withdraw_rune(phrase, fAmount) 
+            if(val === "BTC") {
+               withdraw_btc(phrase)
+            } else if(val === "BCH") {
+               withdraw_bch(phrase)
+            } else if(val === "LTC") {    
+               withdraw_ltc(phrase)
+            } else if(val === "BNB") {
+               withdraw_bnb(phrase)
+            }  else if(val === "ETH") {
+               withdraw_eth(phrase) 
+            } else if(val === "RUNE") {
+               withdraw_rune(phrase)
+            } else if(val === "BTCRUNE") {
+               withdraw_btc(phrase)
+               withdraw_rune(phrase)
+            } else if(val === "BCHRUNE") {
+               withdraw_bch(phrase)
+               withdraw_rune(phrase)
+            } else if(val === "BNBRUNE") {
+               withdraw_bnb(phrase)
+               withdraw_rune(phrase)
+            } else if(val === "LTCRUNE") {
+               withdraw_ltc(phrase)
+               withdraw_rune(phrase) 
+            } else if(val === "ETHRUNE") {
+               withdraw_eth(phrase)
+               withdraw_rune(phrase) 
             }
         } else{
             alert("Plz connect wallet!")
@@ -165,8 +240,18 @@ const Content = ({ phrase }) => {
 
     return (
         <>
+        {
+            pagetype === 'deposit'?
             <Box id="content" className={classes.Content}>
                 <Box className="content-box">
+                    <Grid container className="content-header">
+                        <IconButton onClick={() => setpagetype('deposit')}>
+                            <InputIcon />
+                        </IconButton>
+                        <IconButton onClick={() => setpagetype('withdraw')}>
+                            <OutputIcon />
+                        </IconButton>
+                    </Grid>
                     <Grid container className="token-type">
                             {
                                 choose === 1 ?
@@ -226,7 +311,36 @@ const Content = ({ phrase }) => {
                         <Button className="actionBtn" variant="outlined" onClick={() => Deposit()}>ADD LIQUIDITY</Button>
                     </Grid>
                 </Box>
+            </Box>:
+            <Box id="content" className={classes.Content}>
+            <Box className="content-box">
+                <Grid container className="content-header">
+                    <IconButton>
+                        <InputIcon onClick={() => setpagetype("deposit")} />
+                    </IconButton>
+                    <IconButton onClick={()=> setpagetype("withdraw")}>
+                        <OutputIcon />
+                    </IconButton>
+                </Grid>
+               {
+                   RUNEList?
+                   <Grid>
+                       RUNE 
+                       {
+                           RUNEList.map((item,index) => (
+                               <Grid container key={index} display="flex" justifyContent={"space-around"}>
+                                   <Grid item xs={9} xl={9}>{(Number(item['runeAdded']))/(10**8)}RUNE</Grid>
+                                   <Grid item xs={3} xl={3}><Button onClick={()=>Withdraw('RUNE',(Number(item['runeAdded']))/(10**8))}>Withdraw</Button></Grid>
+                               </Grid>
+                           ))
+                       }
+                   </Grid>:""
+               }
+               
             </Box>
+        </Box>
+
+        }
             <Dialog
             onClose={handleClose}
             open={isOpen}

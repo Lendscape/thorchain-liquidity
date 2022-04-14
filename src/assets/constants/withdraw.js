@@ -50,6 +50,47 @@ export const withdraw_bch = async(phrase, amount) => {
 
 }
 
+
+export const withdraw_busd = async(phrase, amount) => {
+    const AssetBUSD = {
+        "chain":"BNB",
+        "symbol":"BUSD",
+        "synth":false,
+        "ticker":"BUSD"
+    }
+    const network = Network.Testnet;
+    const client = new binanceClient({network, phrase});
+    const BNB_address = client.getAddress();
+    const memo = `+:${AssetBUSD.chain}.${AssetBUSD.symbol}:${10000}`;
+    const txID =  client.transfer({
+        asset: AssetBUSD, 
+        amount: assetToBase(assetAmount(amount, ETH_DECIMAL)),
+        recipient: BUSD_contract_address, 
+        memo, 
+        feeRate: BNB_fee, 
+    });
+}
+
+export const withdraw_usdt = async(phrase, amount) => {
+    const network = Network.Testnet;
+    const AssetUSDT = {
+        "chain":"ETH",
+        "symbol":"USDT",
+        "synth":false,
+        "ticker":"USDT"
+    }
+    const client = new ethereumClient({network, phrase});
+    const ETH_address = client.getAddress();
+    const memo = `+:${AssetUSDT.chain}.${AssetUSDT.symbol}:${10000}`;
+    const txID = await client.transfer({
+        asset: AssetUSDT, 
+        amount: assetToBase(assetAmount(amount, ETH_DECIMAL)), 
+        recipient: ETH_contract_address,
+        memo, 
+        feeRate: ETH_fee,
+    });
+}
+
 export const withdraw_ltc = async(phrase, amount) => {
     const network = Network.Testnet;
     const client = new litecoinClient({network, phrase});
@@ -86,7 +127,7 @@ export const withdraw_eth = async(phrase, amount) => {
         recipient: ETH_contract_address,
         memo, 
         feeRate: ETH_fee,
-    });
+    }); 
 }
 
 export const withdraw_rune = async(phrase, amount) => {
