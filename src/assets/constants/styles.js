@@ -91,12 +91,12 @@ const useStyles = makeStyles((theme) => {
                                 }
                             },
                             "& .activating-description": {
-                                color:"white",
+                                color:"black",
                                 borderRadius: theme.shape.borderRadius,
                                 padding: theme.spacing(0.5625, 2),
                                 margin: 0,
                                 "& p": {
-                                    color:"white",
+                                    color:"black",
                                     fontSize: theme.spacing(1.375)
                                 }
                             },
