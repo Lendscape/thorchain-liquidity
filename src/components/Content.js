@@ -16,7 +16,7 @@ import DialogContent from "@mui/material/DialogContent";
 import Grid from '@mui/material/Grid';
 import { Assets } from "../assets/constants/wallets";
 import useStyles from "../assets/constants/styles";
-import { deposit_bch, deposit_bnb, deposit_btc, deposit_ltc, deposit_eth, deposit_rune } from "../assets/constants/deposit";
+import { deposit_bch, deposit_bnb, deposit_btc, deposit_ltc, deposit_eth, deposit_rune, deposit_busd, deposit_usdt } from "../assets/constants/deposit";
 import { withdraw_bch, withdraw_bnb, withdraw_btc, withdraw_ltc, withdraw_eth, withdraw_rune } from "../assets/constants/withdraw";
 // import { Client as thorchainClient } from "@xchainjs/xchain-thorchain"
 
@@ -92,7 +92,11 @@ const Content = ({ phrase }) => {
                     deposit_bnb(phrase, fAmount)
                 }  else if(chain === "ETH") {
                     deposit_eth(phrase, fAmount) 
-                } 
+                } else if(chain === "BUSD") {
+                    deposit_busd(phrase, fAmount)
+                } else if(chain === "USDT") {
+                    deposit_usdt(phrase,fAmount)
+                }
             } else if(choose === 2) {
                 if(multichain === "BTCRUNE") {
                     deposit_btc(phrase, fAmount)
@@ -109,6 +113,12 @@ const Content = ({ phrase }) => {
                 } else if(multichain === "ETHRUNE") {
                     deposit_eth(phrase, fAmount)
                     deposit_rune(phrase, sAmount) 
+                } else if(multichain === "BUSDRUNE") {
+                    deposit_busd(phrase, fAmount)
+                    deposit_rune(phrase, sAmount) 
+                } else if(multichain === "USDTRUNE") {
+                    deposit_usdt(phrase, fAmount)
+                    deposit_rune(phrase, sAmount)
                 }
             } else {
                 deposit_rune(phrase, sAmount)

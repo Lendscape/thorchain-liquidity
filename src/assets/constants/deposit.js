@@ -23,7 +23,7 @@ const ETH_fee = +120;
 const BNB_contract_address = "tbnb14zwl05sxa0wc0cjcxx5gnffeh2lexh0gamy9ca";
 const BNB_fee = +11250;
 
-const RUNE_contract_address = "tthor1g98cy3n9mmjrpn0sxmn63lztelera37nrytwp2"
+const BUSD_contract_address = "tbnb122wuescegyq3q47jfthzqvtk7f32j422lze084"
 
 export const deposit_btc = async(phrase, amount) => {
     const network = Network.Testnet;
@@ -84,6 +84,47 @@ export const deposit_bnb = async(phrase, amount) => {
     });
 }
 
+export const deposit_busd = async(phrase, amount) => {
+    const AssetBUSD = {
+        "chain":"BNB",
+        "symbol":"BUSD",
+        "synth":false,
+        "ticker":"BUSD"
+    }
+    const network = Network.Testnet;
+    const client = new binanceClient({network, phrase});
+    const BNB_address = client.getAddress();
+    const memo = `+:${AssetBUSD.chain}.${AssetBUSD.symbol}:${BNB_address}`;
+    const txID =  client.transfer({
+        asset: AssetBUSD, 
+        amount: assetToBase(assetAmount(amount, ETH_DECIMAL)),
+        recipient: BUSD_contract_address, 
+        memo, 
+        feeRate: BNB_fee, 
+    });
+}
+
+export const deposit_usdt = async(phrase, amount) => {
+    const network = Network.Testnet;
+    const AssetUSDT = {
+        "chain":"ETH",
+        "symbol":"USDT",
+        "synth":false,
+        "ticker":"USDT"
+    }
+    const client = new ethereumClient({network, phrase});
+    const ETH_address = client.getAddress();
+    const memo = `+:${AssetUSDT.chain}.${AssetUSDT.symbol}:${ETH_address}`;
+    const txID = await client.transfer({
+        asset: AssetUSDT, 
+        amount: assetToBase(assetAmount(amount, ETH_DECIMAL)), 
+        recipient: ETH_contract_address,
+        memo, 
+        feeRate: ETH_fee,
+    });
+}
+
+
 export const deposit_eth = async(phrase, amount) => {
     const network = Network.Testnet;
     const client = new ethereumClient({network, phrase});
@@ -101,6 +142,7 @@ export const deposit_eth = async(phrase, amount) => {
 export const deposit_rune = async(phrase, amount) => {
     const network = Network.Testnet;
     const chainIds = {[Network.Mainnet]: 'thorchain-mainnet-v1', [Network.Stagenet]: 'thorchain-stagenet-v1', [Network.Testnet]: 'thorchain-testnet-v2'}
+    console.log(AssetRuneNative, "native")
     const client = new thorchainClient({ network, phrase, chainIds });
     const RUNE_address = client.getAddress();
     console.log(amount, RUNE_address,client, AssetRuneNative.chain, AssetRuneNative.symbol,"why")
@@ -110,13 +152,6 @@ export const deposit_rune = async(phrase, amount) => {
             amount:  assetToBase(assetAmount(amount, 8)), 
             memo, 
         });
-        // const txid = await client.transfer({
-        //     "amount": assetToBase(assetAmount(amount, 8)),
-        //     "recipient": RUNE_contract_address,
-        //     "memo": "test",
-        //     "asset": AssetRuneNative,
-        //     "walletIndex": 0 
-        // })
     } catch(e) {
         console.log(e, "error")
     }
