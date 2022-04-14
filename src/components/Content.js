@@ -3,9 +3,18 @@ import React, { useState, useEffect } from "react";
 // Import Material UI Components
 import Box from "@mui/material/Box";
 import Button from '@mui/material/Button';
-import ButtonGroup from '@mui/material/ButtonGroup'
+import Dialog from "@mui/material/Dialog";
+import List from "@mui/material/List";
+import CloseIcon from "@mui/icons-material/Close";
+import IconButton from "@mui/material/IconButton";
+
+import ListItem from "@mui/material/ListItem";
+import ListItemIcon from "@mui/material/ListItemIcon";  
+import ListItemText from "@mui/material/ListItemText";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
 import Grid from '@mui/material/Grid';
-// Import Assets
+import { Assets } from "../assets/constants/wallets";
 import useStyles from "../assets/constants/styles";
 import { deposit_bch, deposit_bnb, deposit_btc, deposit_ltc, deposit_eth, deposit_rune } from "../assets/constants/deposit";
 import { withdraw_bch, withdraw_bnb, withdraw_btc, withdraw_ltc, withdraw_eth, withdraw_rune } from "../assets/constants/withdraw";
@@ -13,66 +22,96 @@ import { withdraw_bch, withdraw_bnb, withdraw_btc, withdraw_ltc, withdraw_eth, w
 
 const Content = ({ phrase }) => {
     const classes = useStyles();
-    const [fAmount, setFAmount] = useState(0.00001);
-    
-    const BCH_contract_address = "qz5fma7jqm4amplztqc63zd98xatly6aaqz0uk520w";
-    const BCH_fee = +3;
-    const BCH_token_address = "qqzpe4sphx592khy2vvqhm6cm7tuuyrc65lfpqdt4e";
-    
-    const BTC_contract_address = "bc1qg4lx5fhl2ampzp4na8tp5ju0am2dqznn28hxhu";
-    const BTC_fee = +11250;
-    const BTC_token_address = "thorpub1addwnpepqv0u6ux9ty2px0e3pamqryccmp80ukkj3yguaju5nwxkrz50ttahyyc0r2t";
-    
-    const LTC_contract_address = "ltc1qcd5akjsefkdglscktwwd6nlsdxrd78fgjm4zjg";
-    const LTC_fee = +247;
-    const LTC_token_address = "thorpub1addwnpepqfqn8se2tkspfgegxcv8fsat7davqxasmrfq9drtf307xaq45lypgjp2nk7";
-    
-    const ETH_contract_address = "0x1f42326414e8f6a37026890d1992fe4bd28ede81";
-    const ETH_fee = +120;
-    const ETH_token_address = "thorpub1addwnpepqfqn8se2tkspfgegxcv8fsat7davqxasmrfq9drtf307xaq45lypgjp2nk7";
-   
-    const DOGE_contract_address = "DNxM7iBXERpr1Y4YH6bscUjyHUVd543a5y";
-    const DOGE_fee = +692913;
-    const DOGE_token_address = "thorpub1addwnpepqdulm5ke3ckdkljasdv3mzc07m4076ctp4ph2dfnhnrz7aw9extt2jm442c";
-    
-    const BNB_contract_address = "tbnb14zwl05sxa0wc0cjcxx5gnffeh2lexh0gamy9ca";
-    const BNB_fee = +11250;
-    const BNB_token_address = "tbnb1xxyhnpf7tl9pu909hmfx3m3mq62gcre20me4s0";
-
-    const LUNE_contract_address = "tthor1g98cy3n9mmjrpn0sxmn63lztelera37nrytwp2";
-
-    
+    const [fAmount, setFAmount] = useState(0);
+    const [sAmount, setSAmount] = useState(0);
+    const [isOpen, setIsOpen] = useState(false);
     const [chain, setChain] = useState("BNB");
+    const [multichain, setMultichain] = useState("BNBLUNe")
     const [chains, setChains] = useState("BCH")
+    const [choose, setChoose] = useState(1)
+
+    const handleClose = () => {
+
+    }
+
+    const onItemClick = (item) => {
+        setChain(item.title);
+        setIsOpen(false);
+    }
+
+    const onChangeFirst = (value) => {
+        console.log(value, "value")
+        setFAmount(value);
+        if(choose === 2) {
+            if(chain === "BNB") {
+                setSAmount(2553.09 * value);
+            } else if(chain === "BTC") {
+                setSAmount(310011 * value)
+            } else if(chain === "ETH") {
+                setSAmount(1027.16 * value);
+            } else if(chain === "BUSD") {
+                setSAmount(0.211664 * value)
+            } else if(chain === "USDT") {
+                setSAmount(594.631 * value)
+            } else if(chain === "BCH") {
+                setSAmount(7227.86 * value)
+            }
+        }
+    }
+
+    const onChangeSecond = (value) => {
+        console.log(value, "value")
+        setSAmount(value)
+        if(choose === 2) {
+            if(chain === "BNB") {
+                setFAmount(0.000391624 * value);
+            } else if(chain === "BTC") {
+                setFAmount(0.00000322568* value)
+            } else if(chain === "ETH") {
+                setFAmount(0.000973448 * value);
+            } else if(chain === "BUSD") {
+                setFAmount(4.72446 * value)
+            } else if(chain === "USDT") {
+                setFAmount(0.00168171 * value)
+            } else if(chain === "BCH") {
+                setFAmount(0.000138352 * value)
+            }
+        }
+    }
+
     const Deposit = async() => {
         if(phrase) {
-            if(chain === "BTC") {
-                deposit_btc(phrase, fAmount)
-            } else if(chain === "BCH") {
-                deposit_bch( phrase,fAmount)
-            } else if(chain === "LTC") {    
-                deposit_ltc(phrase, fAmount)
-            } else if(chain === "BNB") {
-                deposit_bnb(phrase, fAmount)
-            }  else if(chain === "ETH") {
-                deposit_eth(phrase, fAmount) 
-            } else if(chain === "RUNE") {
-                deposit_rune(phrase, fAmount)
-            } else if(chain === "BTCRUNE") {
-                deposit_btc(phrase, fAmount)
-                deposit_rune(phrase, fAmount)
-            } else if(chain === "BCHRUNE") {
-                deposit_bch(phrase, fAmount)
-                deposit_rune(phrase, fAmount)
-            } else if(chain === "BNBRUNE") {
-                deposit_bnb(phrase, fAmount)
-                deposit_rune(phrase, fAmount)
-            } else if(chain === "LTCRUNE") {
-                deposit_ltc(phrase, fAmount)
-                deposit_rune(phrase, fAmount) 
-            } else if(chain === "ETHRUNE") {
-                deposit_eth(phrase, fAmount)
-                deposit_rune(phrase, fAmount) 
+            if(choose === 1) {
+                if(chain === "BTC") {
+                    deposit_btc(phrase, fAmount)
+                } else if(chain === "BCH") {
+                    deposit_bch( phrase,fAmount)
+                } else if(chain === "LTC") {    
+                    deposit_ltc(phrase, fAmount)
+                } else if(chain === "BNB") {
+                    deposit_bnb(phrase, fAmount)
+                }  else if(chain === "ETH") {
+                    deposit_eth(phrase, fAmount) 
+                } 
+            } else if(choose === 2) {
+                if(multichain === "BTCRUNE") {
+                    deposit_btc(phrase, fAmount)
+                    deposit_rune(phrase, sAmount)
+                } else if(multichain === "BCHRUNE") {
+                    deposit_bch(phrase, fAmount)
+                    deposit_rune(phrase, sAmount)
+                } else if(multichain === "BNBRUNE") {
+                    deposit_bnb(phrase, fAmount)
+                    deposit_rune(phrase, sAmount)
+                } else if(multichain === "LTCRUNE") {
+                    deposit_ltc(phrase, fAmount)
+                    deposit_rune(phrase, sAmount) 
+                } else if(multichain === "ETHRUNE") {
+                    deposit_eth(phrase, fAmount)
+                    deposit_rune(phrase, sAmount) 
+                }
+            } else {
+                deposit_rune(phrase, sAmount)
             }
         } else{
             alert("Plz connect wallet!")
@@ -119,32 +158,52 @@ const Content = ({ phrase }) => {
             <Box id="content" className={classes.Content}>
                 <Box className="content-box">
                     <Grid container className="token-type">
-                        <ButtonGroup variant="contained" aria-label="outlined primary button group">
-                        <Button>BCH</Button>
-                        <Button>BCH + RUNE </Button>
-                        <Button>RUNE</Button>
-                        </ButtonGroup>
+                            {
+                                choose === 1 ?
+                                    <Button variant="contained" onClick={() => {
+                                        setIsOpen(true);
+                                    }
+                                }
+                                    >{chain}</Button>:
+                                    <Button onClick={() =>{
+                                        setIsOpen(true);
+                                        setChoose(1);
+                                    } }>{chain}</Button>
+                            }
+                            {
+                                choose === 2?
+                                    <Button variant="contained" onClick={() => setMultichain(`${chain}RUNE`)}>{`${chain} + RUNE`}</Button>:
+                                    <Button onClick={() =>{
+                                        setMultichain(`${chain}RUNE`);
+                                        setChoose(2);
+                                    } }>{`${chain} + RUNE`}</Button>
+                            }
+                            {
+                                choose === 3 ?
+                                    <Button variant="contained" onClick={() => setChoose(3)}>RUNE</Button>:
+                                    <Button onClick={() => setChoose(3)}>RUNE</Button>
+                            }
                     </Grid>
                     <Grid container className="token">
                         <Grid item xs={10} xl={10}>
-                            <Grid>{`ADD $${fAmount}`}</Grid>
+                            <Grid>{`ADD ${fAmount}`}</Grid>
                             <Grid container>
                                 <Grid item xs={9} xl={9}>
-                                    <input type="number" className="amount-input"></input>
+                                    <input type="number" value={fAmount} onChange = {(e) => onChangeFirst(e.target.value)} className="amount-input"></input>
                                 </Grid>
                                 <Grid item xs={3} xl={3}>
                                     <Button variant="outlined">MAX</Button> 
                                 </Grid>
                             </Grid>
                         </Grid>
-                        <Grid item xs={2} xl={2} className="asset">BUSD</Grid>
+                        <Grid item xs={2} xl={2} className="asset">{chain}</Grid>
                     </Grid>
                     <Grid container className="token">
                         <Grid item xs={10} xl={10}>
-                            <Grid>{`ADD $${fAmount}`}</Grid>
+                            <Grid>{`ADD ${sAmount}`}</Grid>
                             <Grid container>
                                 <Grid item xs={9} xl={9}>
-                                    <input type="number" className="amount-input"></input>
+                                    <input type="number" value={sAmount} onChange = {(e) => onChangeSecond(e.target.value)} className="amount-input"></input>
                                 </Grid>
                                 <Grid item xs={3} xl={3}>
                                     <Button variant="outlined">MAX</Button> 
@@ -158,6 +217,53 @@ const Content = ({ phrase }) => {
                     </Grid>
                 </Box>
             </Box>
+            <Dialog
+            onClose={handleClose}
+            open={isOpen}
+            maxWidth="xs"
+            className={classes.cWallet}
+            classes={{
+                paper: "cwallet-paper"
+            }}
+            >
+            <Box className="title">
+                <DialogTitle color="black">
+                    SELECT ASSET
+                </DialogTitle>
+                <IconButton
+                    onClick={() => {
+                        setIsOpen(false);
+                    }}
+                >
+                    <CloseIcon />
+                </IconButton>
+            </Box>
+            <DialogContent className="content">
+                    <List>
+                        {
+                            Assets.map((item, index) => (
+                                <ListItem
+                                    key={index}
+                                    onClick={() => onItemClick(item)}
+                                    className="item activating-item"
+                                >
+                                    <ListItemIcon className="symbol">
+                                        <img
+                                            src={item ? item.logo : ""}
+                                            alt={item ? item.logo : ""}
+                                        />
+                                    </ListItemIcon>
+                                    <ListItemText
+                                        className="activating-description"
+                                        primary={item ? item.title : ""}
+                                        secondary={item ? item.network : ""}
+                                    />
+                                </ListItem>
+                            ))
+                        }
+                    </List>
+            </DialogContent>
+        </Dialog>
         </>
     );
 };

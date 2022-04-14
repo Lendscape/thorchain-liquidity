@@ -1,11 +1,19 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import $ from 'jquery'
 import Cwallet from "./Cwallet";
+import { Client as thorchainClient } from "@xchainjs/xchain-thorchain"
+import { Network } from '@xchainjs/xchain-client';
+
 import { useWeb3React } from "@web3-react/core";
 import Button from '@mui/material/Button';
 import useStyles from "../assets/constants/styles";
+import { CopyToClipboard } from "react-copy-to-clipboard";
+import AssignmentTurnedInRoundedIcon from '@mui/icons-material/AssignmentTurnedInRounded';
+import IconButton from "@mui/material/IconButton";
+import Tooltip from "@mui/material/Tooltip";
+import Box from "@mui/material/Box";
 
-const Header = ({setPhrase}) => {
+const Header = ({phrase,setPhrase}) => {
     const classes = useStyles();
     const close = () => {
         $('body').removeClass('active')
@@ -16,6 +24,7 @@ const Header = ({setPhrase}) => {
     }
 
     const [isOpenDialog, setIsOpenDialog] = useState(false);
+    const [thorAddress, setThorAddress] = useState('');
     // eslint-disable-next-line
     const { activate, active, account, deactivate, connector, error, setError } = useWeb3React();
 
@@ -23,13 +32,32 @@ const Header = ({setPhrase}) => {
         setIsOpenDialog(true);
     }
 
+    useEffect(() => {
+        if(phrase) {
+            const network = Network.Testnet;
+            const chainIds = {[Network.Mainnet]: 'thorchain-mainnet-v1', [Network.Stagenet]: 'thorchain-stagenet-v1', [Network.Testnet]: 'thorchain-testnet-v2'}
+            const client = new thorchainClient({ network, phrase, chainIds });
+            setThorAddress(client.getAddress());
+        }
+    },[phrase])
+
     return (
         <header 
             className={classes.Header}
         >
             {
-                active ?
-                    <Button variant="contained" className="button-connected" onClick={onConnectWallet}> {account.substring(0, 3)} ... {account.substring(account.length - 3)}</Button>
+                phrase ?
+                <>
+                    <CopyToClipboard
+                    text={thorAddress}
+                    >
+                        <Tooltip arrow title="Copy address">
+                            <IconButton size="small">
+                                {thorAddress.substring(0, 3)} ... {thorAddress.substring(thorAddress.length - 3)}
+                            </IconButton>
+                        </Tooltip>
+                    </CopyToClipboard>
+                </>
                     :
                     <Button variant="contained" className="button-connect" onClick={onConnectWallet}>Connect</Button>
             }

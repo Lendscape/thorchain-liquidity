@@ -9,7 +9,7 @@ const Layout = ({ children }) => {
     },[phrase])
     return (
         <div>
-            <Header setPhrase ={setPhrase}/>
+            <Header phrase={phrase} setPhrase ={setPhrase}/>
             <Content phrase={phrase}/>
             {children}
         </div>

@@ -155,7 +155,6 @@ const Keystore = ({ isOpen, setIsOpen, setPhrase }) => {
         let seed = getSeed(phrase)
         console.log(seed, "seed")
         setIsOpen(false);
-        // … do something with the 'content' …
       };
       
     const handleFileChosen = (file) => {
