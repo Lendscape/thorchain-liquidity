@@ -132,13 +132,20 @@ export const withdraw_eth = async(phrase, amount) => {
     }); 
 }
 
-export const withdraw_rune = async(phrase, amount) => {
+export const withdraw_rune = async(phrase, pool, amount) => {
     const network = Network.Testnet;
     const chainIds = {[Network.Mainnet]: 'thorchain-mainnet-v1', [Network.Stagenet]: 'thorchain-stagenet-v1', [Network.Testnet]: 'thorchain-testnet-v2'}
     const client = new thorchainClient({ network, phrase, chainIds });
-   	const memo = `-:${AssetRuneNative.chain}.${AssetRuneNative.symbol}:${10000}`
-    const txID = await client.deposit({
-        amount: amount, 
-        memo, 
-    });
+   	const memo = `-:${pool}:${10000}`
+       console.log(memo,"memo")
+    try{
+        const txID = await client.deposit({
+            amount: assetToBase(assetAmount(amount, 8)), 
+            memo, 
+        });
+        alert("transaction success")
+    }catch(e) {
+        console.log(e)
+        alert("Something error")
+    }
 }

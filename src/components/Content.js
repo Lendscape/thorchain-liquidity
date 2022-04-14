@@ -203,8 +203,9 @@ const Content = ({ phrase }) => {
         } 
     }
 
-    const Withdraw = async(val) => {
+    const Withdraw = async(val,pool,amount) => {
         if(phrase) {
+            console.log(pool,"pool")
             if(val === "BTC") {
                withdraw_btc(phrase)
             } else if(val === "BCH") {
@@ -216,7 +217,7 @@ const Content = ({ phrase }) => {
             }  else if(val === "ETH") {
                withdraw_eth(phrase) 
             } else if(val === "RUNE") {
-               withdraw_rune(phrase)
+               withdraw_rune(phrase, pool,amount)
             } else if(val === "BTCRUNE") {
                withdraw_btc(phrase)
                withdraw_rune(phrase)
@@ -330,7 +331,7 @@ const Content = ({ phrase }) => {
                            RUNEList.map((item,index) => (
                                <Grid container key={index} display="flex" justifyContent={"space-around"}>
                                    <Grid item xs={9} xl={9}>{(Number(item['runeAdded']))/(10**8)}RUNE</Grid>
-                                   <Grid item xs={3} xl={3}><Button onClick={()=>Withdraw('RUNE',(Number(item['runeAdded']))/(10**8))}>Withdraw</Button></Grid>
+                                   <Grid item xs={3} xl={3}><Button onClick={()=>Withdraw('RUNE',item.pool,(Number(item['runeAdded']))/(10**8))}>Withdraw</Button></Grid>
                                </Grid>
                            ))
                        }
