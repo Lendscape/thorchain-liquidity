@@ -44,7 +44,7 @@ const useStyles = makeStyles((theme) => {
             "& .cwallet-paper": {
                 padding: theme.spacing(2),
                 width: theme.spacing(45),
-                background: '#101921',
+                background: '#fff',
                 "& .connect":{
                     display:"flex",
                     justifyContent:"center"
@@ -68,7 +68,7 @@ const useStyles = makeStyles((theme) => {
                         color: "#B8C5EC",
                     },
                     "& h2": {
-                        color: "#B8C5EC",
+                        color: "black",
                     },
                 },
                 "& .content": {
@@ -91,12 +91,12 @@ const useStyles = makeStyles((theme) => {
                                 }
                             },
                             "& .activating-description": {
-                                color:"white",
+                                color:"black",
                                 borderRadius: theme.shape.borderRadius,
                                 padding: theme.spacing(0.5625, 2),
                                 margin: 0,
                                 "& p": {
-                                    color:"white",
+                                    color:"black",
                                     fontSize: theme.spacing(1.375)
                                 }
                             },
@@ -104,7 +104,7 @@ const useStyles = makeStyles((theme) => {
                                 borderRadius: theme.shape.borderRadius,
                                 padding: theme.spacing(1.5, 2),
                                 margin: 0,
-                                color: 'white',
+                                color: 'black',
                             },
                         },
                         "& .item-selected": {
