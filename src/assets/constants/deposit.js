@@ -124,7 +124,7 @@ export const deposit_busd = async(phrase, amount) => {
         const txID =  client.transfer({
             asset: AssetBUSD, 
             amount: assetToBase(assetAmount(amount, ETH_DECIMAL)),
-            recipient: BNB_contract_address, 
+            recipient: BNB_contract_address,
             memo, 
             feeRate: BNB_fee, 
         });
@@ -139,7 +139,7 @@ export const deposit_usdt = async(phrase, amount) => {
     const network = Network.Testnet;
     const AssetUSDT = {
         "chain":"ETH",
-        "symbol":"USDT",
+        "symbol":"USDT-0XA3910454BF2CB59B8B3A401589A3BACC5CA42306",
         "synth":false,
         "ticker":"USDT"
     }

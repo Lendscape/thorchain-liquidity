@@ -5,7 +5,6 @@ import { Client as bitcoinCashClient, BCH_DECIMAL } from '@xchainjs/xchain-bitco
 import { Client as bitcoinClient} from "@xchainjs/xchain-bitcoincash"
 import { Client as binanceClient} from "@xchainjs/xchain-binance"
 import { Client as ethereumClient, ETH_DECIMAL} from "@xchainjs/xchain-ethereum"
-import { Client as litecoinClient, LTC_DECIMAL} from "@xchainjs/xchain-litecoin"
 import { Client as thorchainClient } from "@xchainjs/xchain-thorchain"
 import { Network } from '@xchainjs/xchain-client';
 
@@ -16,10 +15,8 @@ import Dialog from "@mui/material/Dialog";
 import List from "@mui/material/List";
 import CloseIcon from "@mui/icons-material/Close";
 import IconButton from "@mui/material/IconButton";
-import OutputIcon from '@mui/icons-material/Output';
 import ListItem from "@mui/material/ListItem";
 import ListItemIcon from "@mui/material/ListItemIcon";  
-import InputIcon from '@mui/icons-material/Input';
 import ListItemText from "@mui/material/ListItemText";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
@@ -29,7 +26,6 @@ import useStyles from "../assets/constants/styles";
 import axios from "axios";
 import { deposit_bch, deposit_bnb, deposit_btc, deposit_ltc, deposit_eth, deposit_rune, deposit_busd, deposit_usdt } from "../assets/constants/deposit";
 import { withdraw_bch, withdraw_bnb, withdraw_btc, withdraw_ltc, withdraw_eth, withdraw_rune } from "../assets/constants/withdraw";
-// import { Client as thorchainClient } from "@xchainjs/xchain-thorchain"
 
 const Content = ({ phrase }) => {
     const classes = useStyles();
@@ -37,8 +33,7 @@ const Content = ({ phrase }) => {
     const [sAmount, setSAmount] = useState(0);
     const [isOpen, setIsOpen] = useState(false);
     const [chain, setChain] = useState("BNB");
-    const [multichain, setMultichain] = useState("BNBLUNe")
-    const [chains, setChains] = useState("BCH")
+    const [multichain, setMultichain] = useState("BNBLUNE")
     const [choose, setChoose] = useState(1)
     const [BCHList, setBCHList] = useState([]);
     const [BNBList, setBNBList] = useState([]);
@@ -46,13 +41,13 @@ const Content = ({ phrase }) => {
     const [RUNEList, setRUNEList] = useState([]);
     const [ETHList, setETHList] = useState([]);
     const [pagetype, setpagetype] = useState("deposit")
-    const handleClose = () => {
-
-    }
-
+ 
     const onItemClick = (item) => {
         setChain(item.title);
         setIsOpen(false);
+    }
+    const handleClose = () => {
+        setIsOpen(false)
     }
 
     const onChangeFirst = (value) => {
@@ -112,6 +107,7 @@ const Content = ({ phrase }) => {
             try {
                 const BTC_list = await axios.get(`https://testnet.midgard.thorchain.info/v2/member/${BTC_address}`)
                 if(BTC_list.data) {
+                    console.log(BTC_list.data.pools, "btclist")
                     setBTCList(BTC_list.data.pools)
                 }
             } catch(e) {
@@ -120,7 +116,7 @@ const Content = ({ phrase }) => {
             try {
                 const BNB_list = await axios.get(`https://testnet.midgard.thorchain.info/v2/member/${BNB_address}`)
                 if(BNB_list.data) {
-                    console.log(BNB_list.data.poolsm, "bnblist")
+                    console.log(BNB_list.data.pools, "bnblist")
                     setBNBList(BNB_list.data.pools)
                 }
             }catch(e) {
@@ -129,6 +125,7 @@ const Content = ({ phrase }) => {
             try {
                 const ETH_list = await axios.get(`https://testnet.midgard.thorchain.info/v2/member/${ETH_address}`)
                 if(ETH_list.data) {
+                    console.log(ETH_list.data.pools, "ethlist")
                     setETHList(ETH_list.data.pools)
                 }
             } catch(e) {
@@ -146,6 +143,7 @@ const Content = ({ phrase }) => {
             try {
                 const BCH_list = await axios.get(`https://testnet.midgard.thorchain.info/v2/member/${BCH_address}`)
                 if(BCH_list.data) {
+                    console.log(BCH_list.data.pools, "bchlist" )
                     setBCHList(BCH_list.data.pools)
                 }
             }catch(e) {
@@ -207,32 +205,32 @@ const Content = ({ phrase }) => {
         if(phrase) {
             console.log(pool,"pool")
             if(val === "BTC") {
-               withdraw_btc(phrase)
+               withdraw_btc(phrase, pool, amount)
             } else if(val === "BCH") {
-               withdraw_bch(phrase)
+               withdraw_bch(phrase, pool, amount)
             } else if(val === "LTC") {    
-               withdraw_ltc(phrase)
+               withdraw_ltc(phrase, pool, amount)
             } else if(val === "BNB") {
-               withdraw_bnb(phrase)
+               withdraw_bnb(phrase, pool, amount)
             }  else if(val === "ETH") {
-               withdraw_eth(phrase) 
+               withdraw_eth(phrase, pool, amount) 
             } else if(val === "RUNE") {
                withdraw_rune(phrase, pool,amount)
             } else if(val === "BTCRUNE") {
-               withdraw_btc(phrase)
-               withdraw_rune(phrase)
+               withdraw_btc(phrase, pool, amount)
+               withdraw_rune(phrase, pool, amount)
             } else if(val === "BCHRUNE") {
-               withdraw_bch(phrase)
-               withdraw_rune(phrase)
+               withdraw_bch(phrase, pool, amount)
+               withdraw_rune(phrase, pool, amount)
             } else if(val === "BNBRUNE") {
-               withdraw_bnb(phrase)
-               withdraw_rune(phrase)
+               withdraw_bnb(phrase, pool, amount)
+               withdraw_rune(phrase, pool, amount)
             } else if(val === "LTCRUNE") {
-               withdraw_ltc(phrase)
-               withdraw_rune(phrase) 
+               withdraw_ltc(phrase, pool, amount)
+               withdraw_rune(phrase, pool, amount) 
             } else if(val === "ETHRUNE") {
-               withdraw_eth(phrase)
-               withdraw_rune(phrase) 
+               withdraw_eth(phrase, pool, amount)
+               withdraw_rune(phrase, pool, amount) 
             }
         } else{
             alert("Plz connect wallet!")
@@ -324,7 +322,7 @@ const Content = ({ phrase }) => {
                 </Button>
             </Grid>
                {
-                   RUNEList?
+                   RUNEList&&RUNEList.length>0?
                    <Grid>
                        RUNE 
                        {
@@ -337,7 +335,71 @@ const Content = ({ phrase }) => {
                        }
                    </Grid>:""
                }
+               {
+                       BNBList&&BNBList.length>0?
+                       <Grid>
+                           BNB 
+                           {
+                               BNBList.map((item,index) => (
+                                   <Grid container key={index} display="flex" justifyContent={"space-around"}>
+                                       <Grid item xs={9} xl={9}>{(Number(item['assetAdded']))/(10**8)}{item.pool === "BNB.BNB"?"BNB":"BUSD"}</Grid>
+                                       {
+                                           item.pool === "BNB.BNB"?
+                                           <Grid item xs={3} xl={3}><Button onClick={()=>Withdraw('BNB',item.pool,(Number(item['assetAdded']))/(10**10))}>Withdraw</Button></Grid>:
+                                           <Grid item xs={3} xl={3}><Button onClick={()=>Withdraw('BUSD',item.pool,(Number(item['assetAdded']))/(10**10))}>Withdraw</Button></Grid>
+                                       }
+                                   </Grid>
+                               ))
+                           }
+                       </Grid>:""
+               }
+               {
+                       ETHList&&ETHList.length>0?
+                       <Grid>
+                           ETH 
+                           {
+                               ETHList.map((item,index) => (
+                                   <Grid container key={index} display="flex" justifyContent={"space-around"}>
+                                       <Grid item xs={9} xl={9}>{(Number(item['assetAdded']))/(10**8)}{item.pool === "ETH.ETH"?"ETH":"USDT"}</Grid>
+                                       {
+                                           item.pool === "ETH.ETH"?
+                                           <Grid item xs={3} xl={3}><Button onClick={()=>Withdraw('ETH',item.pool,(Number(item['assetAdded']))/(10**10))}>Withdraw</Button></Grid>:
+                                           <Grid item xs={3} xl={3}><Button onClick={()=>Withdraw('USDT',item.pool,(Number(item['assetAdded']))/(10**10))}>Withdraw</Button></Grid>
+                                       }
+                                   </Grid>
+                               ))
+                           }
+                       </Grid>:""
+               }
+               {
+                       BTCList&&BTCList.length>0?
+                       <Grid>
+                           BTC 
+                           {
+                               BTCList.map((item,index) => (
+                                   <Grid container key={index} display="flex" justifyContent={"space-around"}>
+                                       <Grid item xs={9} xl={9}>{(Number(item['assetAdded']))/(10**8)}BTC</Grid>
+                                       <Grid item xs={3} xl={3}><Button onClick={()=>Withdraw('BTC',item.pool,(Number(item['assetAdded']))/(10**10))}>Withdraw</Button></Grid>
+                                   </Grid>
+                               ))
+                           }
+                       </Grid>:""
+               }
                
+               {
+                       BCHList&&BCHList.length>0?
+                       <Grid>
+                           BCH 
+                           {
+                               BCHList.map((item,index) => (
+                                   <Grid container key={index} display="flex" justifyContent={"space-around"}>
+                                       <Grid item xs={9} xl={9}>{(Number(item['assetAdded']))/(10**8)}BCH</Grid>
+                                       <Grid item xs={3} xl={3}><Button onClick={()=>Withdraw('BCH',item.pool,(Number(item['assetAdded']))/(10**10))}>Withdraw</Button></Grid>
+                                   </Grid>
+                               ))
+                           }
+                       </Grid>:""
+               }
             </Box>
         </Box>
 

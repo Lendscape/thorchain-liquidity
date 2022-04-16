@@ -1,5 +1,3 @@
-import { useWeb3React } from "@web3-react/core";
-import { walletconnect } from "./connectors";
 
 //wallet logo
 import WalletConnect from "../img/wallets/wallet-connect.svg";
@@ -123,16 +121,6 @@ const Assets = [
     },
 ]
 
-const ConnectedWallet = () => {
-    const { connector } = useWeb3React();
-    if (connector) {
-        return {
-            name: "WalletConnect",
-            logo: WalletConnect,
-        };
-    } else {
-        return {};
-    }
-};
 
-export { Wallets, Assets, Chains, ConnectedWallet };
+
+export { Wallets, Assets, Chains };
