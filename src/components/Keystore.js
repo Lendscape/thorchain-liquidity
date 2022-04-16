@@ -1,12 +1,4 @@
 import React, { useState, useEffect } from "react";
-
-// ** Web3 React
-import {
-    NoEthereumProviderError,
-    UserRejectedRequestError as UserRejectedRequestErrorInjected,
-} from "@web3-react/injected-connector";
-import { useWeb3React, UnsupportedChainIdError } from "@web3-react/core";
-import { useWallet } from '@terra-money/wallet-provider';
 import { generatePhrase, validatePhrase, encryptToKeyStore, decryptFromKeystore } from "@xchainjs/xchain-crypto"
 
 // Import Material UI Components

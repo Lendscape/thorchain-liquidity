@@ -201,40 +201,46 @@ const Content = ({ phrase }) => {
         } 
     }
 
-    const Withdraw = async(val,pool,amount) => {
-        if(phrase) {
-            console.log(pool,"pool")
-            if(val === "BTC") {
-               withdraw_btc(phrase, pool, amount)
-            } else if(val === "BCH") {
-               withdraw_bch(phrase, pool, amount)
-            } else if(val === "LTC") {    
-               withdraw_ltc(phrase, pool, amount)
-            } else if(val === "BNB") {
-               withdraw_bnb(phrase, pool, amount)
-            }  else if(val === "ETH") {
-               withdraw_eth(phrase, pool, amount) 
-            } else if(val === "RUNE") {
-               withdraw_rune(phrase, pool,amount)
-            } else if(val === "BTCRUNE") {
-               withdraw_btc(phrase, pool, amount)
-               withdraw_rune(phrase, pool, amount)
-            } else if(val === "BCHRUNE") {
-               withdraw_bch(phrase, pool, amount)
-               withdraw_rune(phrase, pool, amount)
-            } else if(val === "BNBRUNE") {
-               withdraw_bnb(phrase, pool, amount)
-               withdraw_rune(phrase, pool, amount)
-            } else if(val === "LTCRUNE") {
-               withdraw_ltc(phrase, pool, amount)
-               withdraw_rune(phrase, pool, amount) 
-            } else if(val === "ETHRUNE") {
-               withdraw_eth(phrase, pool, amount)
-               withdraw_rune(phrase, pool, amount) 
-            }
-        } else{
-            alert("Plz connect wallet!")
-        } 
+    const Withdraw = async(val,pool,ramount, amount) => {
+        if(ramount < amount) {
+            alert("blance is enough");
+            return;
+        } else {
+            console.log(ramount, amount,"amount")
+            if(phrase) {
+                console.log(pool,"pool")
+                if(val === "BTC") {
+                   withdraw_btc(phrase, pool, amount)
+                } else if(val === "BCH") {
+                   withdraw_bch(phrase, pool, amount)
+                } else if(val === "LTC") {    
+                   withdraw_ltc(phrase, pool, amount)
+                } else if(val === "BNB") {
+                   withdraw_bnb(phrase, pool, amount)
+                }  else if(val === "ETH") {
+                   withdraw_eth(phrase, pool, amount) 
+                } else if(val === "RUNE") {
+                   withdraw_rune(phrase, pool,amount)
+                } else if(val === "BTCRUNE") {
+                   withdraw_btc(phrase, pool, amount)
+                   withdraw_rune(phrase, pool, amount)
+                } else if(val === "BCHRUNE") {
+                   withdraw_bch(phrase, pool, amount)
+                   withdraw_rune(phrase, pool, amount)
+                } else if(val === "BNBRUNE") {
+                   withdraw_bnb(phrase, pool, amount)
+                   withdraw_rune(phrase, pool, amount)
+                } else if(val === "LTCRUNE") {
+                   withdraw_ltc(phrase, pool, amount)
+                   withdraw_rune(phrase, pool, amount) 
+                } else if(val === "ETHRUNE") {
+                   withdraw_eth(phrase, pool, amount)
+                   withdraw_rune(phrase, pool, amount) 
+                }
+            } else{
+                alert("Plz connect wallet!")
+            } 
+        }
     }
 
     return (
@@ -328,8 +334,9 @@ const Content = ({ phrase }) => {
                        {
                            RUNEList.map((item,index) => (
                                <Grid container key={index} display="flex" justifyContent={"space-around"}>
-                                   <Grid item xs={9} xl={9}>{(Number(item['runeAdded']))/(10**8)}RUNE</Grid>
-                                   <Grid item xs={3} xl={3}><Button onClick={()=>Withdraw('RUNE',item.pool,(Number(item['runeAdded']))/(10**8))}>Withdraw</Button></Grid>
+                                   <Grid item xs={3} xl={3}>{(Number(item['runeAdded']))/(10**8)}RUNE</Grid>
+                                   <Grid item xs={5} xl={5}><input type="number" id="runeAmount" placeholder="withdraw amount" style={{width:"100%"}}></input></Grid>
+                                   <Grid item xs={3} xl={3}><Button onClick={()=>Withdraw('RUNE',item.pool,(Number(item['runeAdded']))/(10**8), Number(document.getElementById("runeAmount").value))}>Withdraw</Button></Grid>
                                </Grid>
                            ))
                        }
@@ -342,11 +349,12 @@ const Content = ({ phrase }) => {
                            {
                                BNBList.map((item,index) => (
                                    <Grid container key={index} display="flex" justifyContent={"space-around"}>
-                                       <Grid item xs={9} xl={9}>{(Number(item['assetAdded']))/(10**8)}{item.pool === "BNB.BNB"?"BNB":"BUSD"}</Grid>
+                                       <Grid item xs={3} xl={3}>{(Number(item['assetAdded']))/(10**8)}{item.pool === "BNB.BNB"?"BNB":"BUSD"}</Grid>
+                                       <Grid item xs={5} xl={5}><input type="number" id="bnbAmount" placeholder="withdraw amount" style={{width:"100%"}}></input></Grid>
                                        {
                                            item.pool === "BNB.BNB"?
-                                           <Grid item xs={3} xl={3}><Button onClick={()=>Withdraw('BNB',item.pool,(Number(item['assetAdded']))/(10**10))}>Withdraw</Button></Grid>:
-                                           <Grid item xs={3} xl={3}><Button onClick={()=>Withdraw('BUSD',item.pool,(Number(item['assetAdded']))/(10**10))}>Withdraw</Button></Grid>
+                                           <Grid item xs={3} xl={3}><Button onClick={()=>Withdraw('BNB',item.pool,(Number(item['assetAdded']))/(10**10), Number(document.getElementById("bnbAmount").value))}>Withdraw</Button></Grid>:
+                                           <Grid item xs={3} xl={3}><Button onClick={()=>Withdraw('BUSD',item.pool,(Number(item['assetAdded']))/(10**10),Number(document.getElementById("bnbAmount").value) )}>Withdraw</Button></Grid>
                                        }
                                    </Grid>
                                ))
@@ -361,10 +369,11 @@ const Content = ({ phrase }) => {
                                ETHList.map((item,index) => (
                                    <Grid container key={index} display="flex" justifyContent={"space-around"}>
                                        <Grid item xs={9} xl={9}>{(Number(item['assetAdded']))/(10**8)}{item.pool === "ETH.ETH"?"ETH":"USDT"}</Grid>
+                                       <Grid item xs={5} xl={5}><input type="number" id="ethAmount" placeholder="withdraw amount" style={{width:"100%"}}></input></Grid>
                                        {
                                            item.pool === "ETH.ETH"?
-                                           <Grid item xs={3} xl={3}><Button onClick={()=>Withdraw('ETH',item.pool,(Number(item['assetAdded']))/(10**10))}>Withdraw</Button></Grid>:
-                                           <Grid item xs={3} xl={3}><Button onClick={()=>Withdraw('USDT',item.pool,(Number(item['assetAdded']))/(10**10))}>Withdraw</Button></Grid>
+                                           <Grid item xs={3} xl={3}><Button onClick={()=>Withdraw('ETH',item.pool,(Number(item['assetAdded']))/(10**10), Number(document.getElementById("ethAmount").value))}>Withdraw</Button></Grid>:
+                                           <Grid item xs={3} xl={3}><Button onClick={()=>Withdraw('USDT',item.pool,(Number(item['assetAdded']))/(10**10), Number(document.getElementById("ethAmount").value))}>Withdraw</Button></Grid>
                                        }
                                    </Grid>
                                ))
@@ -379,7 +388,8 @@ const Content = ({ phrase }) => {
                                BTCList.map((item,index) => (
                                    <Grid container key={index} display="flex" justifyContent={"space-around"}>
                                        <Grid item xs={9} xl={9}>{(Number(item['assetAdded']))/(10**8)}BTC</Grid>
-                                       <Grid item xs={3} xl={3}><Button onClick={()=>Withdraw('BTC',item.pool,(Number(item['assetAdded']))/(10**10))}>Withdraw</Button></Grid>
+                                       <Grid item xs={5} xl={5}><input type="number" id="btcAmount" placeholder="withdraw amount" style={{width:"100%"}}></input></Grid>
+                                       <Grid item xs={3} xl={3}><Button onClick={()=>Withdraw('BTC',item.pool,(Number(item['assetAdded']))/(10**10), Number(document.getElementById("btcAmount").value))}>Withdraw</Button></Grid>
                                    </Grid>
                                ))
                            }
@@ -394,7 +404,8 @@ const Content = ({ phrase }) => {
                                BCHList.map((item,index) => (
                                    <Grid container key={index} display="flex" justifyContent={"space-around"}>
                                        <Grid item xs={9} xl={9}>{(Number(item['assetAdded']))/(10**8)}BCH</Grid>
-                                       <Grid item xs={3} xl={3}><Button onClick={()=>Withdraw('BCH',item.pool,(Number(item['assetAdded']))/(10**10))}>Withdraw</Button></Grid>
+                                       <Grid item xs={5} xl={5}><input type="number" id="bchAmount" placeholder="withdraw amount" style={{width:"100%"}}></input></Grid>
+                                       <Grid item xs={3} xl={3}><Button onClick={()=>Withdraw('BCH',item.pool,(Number(item['assetAdded']))/(10**10), Number(document.getElementById("bchAmount").value))}>Withdraw</Button></Grid>
                                    </Grid>
                                ))
                            }

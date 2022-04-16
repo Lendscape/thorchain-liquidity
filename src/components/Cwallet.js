@@ -22,13 +22,10 @@ import { Wallets } from "../assets/constants/wallets";
 
 const Cwallet = ({ isOpen, setIsOpen, setPhrase }) => {
     const classes = useStyles();
-    useEffect(() => {
-        console.log(setPhrase,setIsOpen, "keystorey")
-    },[setPhrase])
 
     const [keystoreConnector, setKeystoreConnector] = useState(false);
    
-    const onThorchainConnect = async (item) => {
+    const onThorchainConnect = async () => {
         handleClose();
         setKeystoreConnector(true);
     }
@@ -36,7 +33,6 @@ const Cwallet = ({ isOpen, setIsOpen, setPhrase }) => {
     const handleClose = () => {
         setIsOpen(false);
     };
-
 
     return (
         <>
@@ -69,7 +65,7 @@ const Cwallet = ({ isOpen, setIsOpen, setPhrase }) => {
                                     <ListItem
                                         key={idx}
                                         className="item"
-                                        onClick={() => onThorchainConnect(item)}
+                                        onClick={() => onThorchainConnect()}
                                     >
                                         <ListItemIcon className="symbol">
                                             <img
