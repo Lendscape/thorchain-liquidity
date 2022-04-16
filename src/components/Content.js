@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from "react";
-
-//
-import { Client as bitcoinCashClient, BCH_DECIMAL } from '@xchainjs/xchain-bitcoincash';
+import { Client as bitcoinCashClient} from '@xchainjs/xchain-bitcoincash';
 import { Client as bitcoinClient} from "@xchainjs/xchain-bitcoincash"
 import { Client as binanceClient} from "@xchainjs/xchain-binance"
-import { Client as ethereumClient, ETH_DECIMAL} from "@xchainjs/xchain-ethereum"
+import { Client as ethereumClient} from "@xchainjs/xchain-ethereum"
 import { Client as thorchainClient } from "@xchainjs/xchain-thorchain"
 import { Network } from '@xchainjs/xchain-client';
 

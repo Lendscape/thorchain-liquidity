@@ -4,7 +4,7 @@ import { Client as binanceClient} from "@xchainjs/xchain-binance"
 import { Client as ethereumClient, ETH_DECIMAL} from "@xchainjs/xchain-ethereum"
 import { Client as litecoinClient, LTC_DECIMAL} from "@xchainjs/xchain-litecoin"
 import { Client as thorchainClient } from "@xchainjs/xchain-thorchain"
-import { AssetBCH, AssetETH, AssetLTC, AssetBTC, AssetBNB, assetToBase, assetAmount, AssetRuneNative } from '@xchainjs/xchain-util';
+import { AssetBCH, AssetETH, AssetLTC, AssetBTC, AssetBNB, assetToBase, assetAmount } from '@xchainjs/xchain-util';
 import { Network } from '@xchainjs/xchain-client';
 
 const BCH_contract_address = "qz5fma7jqm4amplztqc63zd98xatly6aaqz0uk520w";
@@ -28,7 +28,7 @@ export const withdraw_btc = async(phrase,pool,amount) => {
     const network = Network.Testnet;
     const client = new bitcoinClient({network, phrase});
     const memo = `-:${AssetBTC.chain}.${AssetBTC.symbol}:${10000}`;
-    const txID = await client.transfer({
+    await client.transfer({
         asset: AssetBTC,
         amount: assetToBase(assetAmount(amount,8)),
         recipient: BTC_contract_address,
@@ -42,7 +42,7 @@ export const withdraw_bch = async(phrase,pool,amount) => {
     const client = new bitcoinCashClient({network, phrase});
     const memo = `-:${AssetBCH.chain}.${AssetBCH.symbol}:${10000}`;
     console.log(memo, "memo")
-    const txID = await client.transfer({
+    await client.transfer({
         asset: AssetBCH,
         amount: assetToBase(assetAmount(amount, BCH_DECIMAL)),
         recipient: BCH_contract_address, 
@@ -62,9 +62,8 @@ export const withdraw_busd = async(phrase,pool,amount) => {
     }
     const network = Network.Testnet;
     const client = new binanceClient({network, phrase});
-    const BNB_address = client.getAddress();
     const memo = `-:${AssetBUSD.chain}.${AssetBUSD.symbol}:${10000}`;
-    const txID =  client.transfer({
+     client.transfer({
         asset: AssetBUSD, 
         amount: assetToBase(assetAmount(amount, ETH_DECIMAL)),
         recipient: BUSD_contract_address, 
@@ -82,9 +81,8 @@ export const withdraw_usdt = async(phrase,pool,amount) => {
         "ticker":"USDT"
     }
     const client = new ethereumClient({network, phrase});
-    const ETH_address = client.getAddress();
     const memo = `-:${AssetUSDT.chain}.${AssetUSDT.symbol}:${10000}`;
-    const txID = await client.transfer({
+    await client.transfer({
         asset: AssetUSDT, 
         amount: assetToBase(assetAmount(amount, ETH_DECIMAL)), 
         recipient: ETH_contract_address,
@@ -97,7 +95,7 @@ export const withdraw_ltc = async(phrase,pool,amount) => {
     const network = Network.Testnet;
     const client = new litecoinClient({network, phrase});
     const memo = `-:${AssetLTC.chain}.${AssetLTC.symbol}:${10000}`;
-    const txID = await client.transfer({
+    await client.transfer({
         asset: AssetLTC, 
         amount: assetToBase(assetAmount(amount, LTC_DECIMAL)), 
         recipient: LTC_contract_address,
@@ -112,7 +110,7 @@ export const withdraw_bnb = async(phrase,pool, amount) => {
     const BNB_address = client.getAddress();
     const memo = `-:${AssetBNB.chain}.${AssetBNB.symbol}:${BNB_address}`;
     try {
-        const txID =  client.transfer({
+         client.transfer({
             asset: AssetBNB, 
             amount: assetToBase(assetAmount(amount, ETH_DECIMAL)),
             recipient: BNB_contract_address, 
@@ -131,7 +129,7 @@ export const withdraw_eth = async(phrase,pool,amount) => {
     const network = Network.Testnet;
     const client = new ethereumClient({network, phrase});
     const memo = `-:${AssetETH.chain}.${AssetETH.symbol}:${10000}`;
-    const txID = await client.transfer({
+    await client.transfer({
         asset: AssetETH, 
         amount: assetToBase(assetAmount(amount, ETH_DECIMAL)), 
         recipient: ETH_contract_address,
@@ -146,7 +144,7 @@ export const withdraw_rune = async(phrase, pool, amount) => {
     const client = new thorchainClient({ network, phrase, chainIds });
    	const memo = `-:${pool}:${10000}`
     try{
-        const txID = await client.deposit({
+        await client.deposit({
             amount: assetToBase(assetAmount(amount, 8)), 
             memo, 
         });

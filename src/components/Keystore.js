@@ -1,32 +1,22 @@
-import React, { useState, useEffect } from "react";
-import { generatePhrase, validatePhrase, encryptToKeyStore, decryptFromKeystore } from "@xchainjs/xchain-crypto"
+import React, { useState } from "react";
+import { generatePhrase, validatePhrase, encryptToKeyStore } from "@xchainjs/xchain-crypto"
 
 // Import Material UI Components
 import Box from "@mui/material/Box";
 import List from "@mui/material/List";
-import Link from "@mui/material/Link";
 import Dialog from "@mui/material/Dialog";
-import Tooltip from "@mui/material/Tooltip";
 import ListItem from "@mui/material/ListItem";
 import IconButton from "@mui/material/IconButton";
 import DialogTitle from "@mui/material/DialogTitle";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
 import DialogContent from "@mui/material/DialogContent";
-import CircularProgress from "@mui/material/CircularProgress";
-import ListItemSecondaryAction from "@mui/material/ListItemSecondaryAction";
-import { InputBase } from '@mui/material';
+
 
 
 // Import Assets
 import useStyles from "../assets/constants/styles";
 // Import Icons
 import CloseIcon from "@mui/icons-material/Close";
-import { bech32 } from 'bech32'
 import crypto from 'crypto'
-import hexEncoding from 'crypto-js/enc-hex'
-import ripemd160 from 'crypto-js/ripemd160'
-import sha256 from 'crypto-js/sha256'
 import * as bip39 from 'bip39'
 import { blake256 } from 'foundry-primitives'
 
@@ -36,7 +26,6 @@ const Keystore = ({ isOpen, setIsOpen, setPhrase }) => {
     const hashFunction = 'sha256'
     let fileReader;
    
-    const [activatingConnector, setActivatingConnector] = useState(false);
     const [password, setPassword] = useState('');
     const [confirmpass, setConfirmpass] = useState('');
     const [decryptionpass, setDecryptionpass] = useState('');
@@ -75,24 +64,6 @@ const Keystore = ({ isOpen, setIsOpen, setPhrase }) => {
           console.log('Invalid BIP39 phrase')
         }
         return bip39.mnemonicToSeedSync(phrase)
-    }
-
-    const encodeAddress = (value, prefix = 'thor', type = 'hex') => {
-        let words
-        if (Buffer.isBuffer(value)) {
-          words = bech32.toWords(Buffer.from(value))
-        } else {
-          words = bech32.toWords(Buffer.from(value, type))
-        }
-        return bech32.encode(prefix, words)
-      }
-
-    const sha256ripemd160 = (hex) => {
-        if (typeof hex !== 'string') throw new Error('sha256ripemd160 expects a string')
-        if (hex.length % 2 !== 0) throw new Error(`invalid hex string length: ${hex}`)
-        const hexEncoded = hexEncoding.parse(hex)
-        const ProgramSha256 = sha256(hexEncoded)
-        return ripemd160(ProgramSha256).toString()
     }
     
     const pbkdf2Async = async (
@@ -138,7 +109,7 @@ const Keystore = ({ isOpen, setIsOpen, setPhrase }) => {
         setIsOpen(false);
     };
 
-    const handleFileRead = async(e) => {
+    const handleFileRead = async() => {
         const content = fileReader.result;
         console.log((content))
         let phrase = await decryptFromKeystore(JSON.parse(content), decryptionpass)
