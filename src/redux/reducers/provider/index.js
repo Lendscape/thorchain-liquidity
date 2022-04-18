@@ -5,13 +5,13 @@ const Provider = (state = {}, action) => {
         case NETWORK: {
             return {
                 ...state,
-                ...action.payload
+                ...action.payload,
             };
         }
         case PHRASE: {
             return {
                 ...state,
-                ...action.payload
+                ...action.payload,
             };
         }
         default: {
