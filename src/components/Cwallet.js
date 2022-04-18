@@ -11,16 +11,13 @@ import DialogTitle from "@mui/material/DialogTitle";
 import ListItemIcon from "@mui/material/ListItemIcon";  
 import ListItemText from "@mui/material/ListItemText";
 import DialogContent from "@mui/material/DialogContent";
-
 // Import Assets
 import useStyles from "../assets/constants/styles";
-
 // Import Icons
 import CloseIcon from "@mui/icons-material/Close";
-
 import { Wallets } from "../assets/constants/wallets";
 
-const Cwallet = ({ isOpen, setIsOpen, setPhrase }) => {
+const Cwallet = ({ isOpen, setIsOpen, setPhrase, network }) => {
     const classes = useStyles();
 
     const [keystoreConnector, setKeystoreConnector] = useState(false);

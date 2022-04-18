@@ -5,6 +5,7 @@ import { Client as binanceClient} from "@xchainjs/xchain-binance"
 import { Client as ethereumClient} from "@xchainjs/xchain-ethereum"
 import { Client as thorchainClient } from "@xchainjs/xchain-thorchain"
 import { Network } from '@xchainjs/xchain-client';
+import { useSelector } from "react-redux";
 
 // Import Material UI Components
 import Box from "@mui/material/Box";
@@ -25,10 +26,10 @@ import axios from "axios";
 import { deposit_bch, deposit_bnb, deposit_btc, deposit_ltc, deposit_eth, deposit_rune, deposit_busd, deposit_usdt } from "../assets/constants/deposit";
 import { withdraw_bch, withdraw_bnb, withdraw_btc, withdraw_ltc, withdraw_eth, withdraw_rune } from "../assets/constants/withdraw";
 
-const Content = ({ phrase }) => {
+const Content = () => {
     const classes = useStyles();
-    const [fAmount, setFAmount] = useState(0);
-    const [sAmount, setSAmount] = useState(0);
+    const [fAmount, setFAmount] = useState();
+    const [sAmount, setSAmount] = useState();
     const [isOpen, setIsOpen] = useState(false);
     const [chain, setChain] = useState("BNB");
     const [multichain, setMultichain] = useState("BNBLUNE")
@@ -39,6 +40,9 @@ const Content = ({ phrase }) => {
     const [RUNEList, setRUNEList] = useState([]);
     const [ETHList, setETHList] = useState([]);
     const [pagetype, setpagetype] = useState("deposit")
+
+    const phrase = useSelector((store) => store.provider.phrase);
+    let network_val = useSelector((store) => store.provider.network);
  
     const onItemClick = (item) => {
         setChain(item.title);
@@ -46,10 +50,9 @@ const Content = ({ phrase }) => {
     }
     const handleClose = () => {
         setIsOpen(false)
-    }
+     }
 
     const onChangeFirst = (value) => {
-        console.log(value, "value")
         setFAmount(value);
         if(choose === 2) {
             if(chain === "BNB") {
@@ -150,49 +153,53 @@ const Content = ({ phrase }) => {
         }
      
     },[phrase])
+
     const Deposit = async() => {
+        network_val = network_val ? network_val : 1;
         if(phrase) {
+            const network = network_val === 1 ? Network.Testnet:network_val === 2 ? Network.Mainnet : Network.Stagenet;
+            console.log(network, 'network')
             if(choose === 1) {
                 if(chain === "BTC") {
-                    deposit_btc(phrase, fAmount)
+                    deposit_btc(phrase, fAmount, network)
                 } else if(chain === "BCH") {
-                    deposit_bch( phrase,fAmount)
+                    deposit_bch(phrase, fAmount, network)
                 } else if(chain === "LTC") {    
-                    deposit_ltc(phrase, fAmount)
+                    deposit_ltc(phrase, fAmount, network)
                 } else if(chain === "BNB") {
-                    deposit_bnb(phrase, fAmount)
+                    deposit_bnb(phrase, fAmount, network)
                 }  else if(chain === "ETH") {
-                    deposit_eth(phrase, fAmount) 
+                    deposit_eth(phrase, fAmount, network) 
                 } else if(chain === "BUSD") {
-                    deposit_busd(phrase, fAmount)
+                    deposit_busd(phrase, fAmount, network)
                 } else if(chain === "USDT") {
-                    deposit_usdt(phrase,fAmount)
+                    deposit_usdt(fAmount)
                 }
             } else if(choose === 2) {
                 if(multichain === "BTCRUNE") {
-                    deposit_btc(phrase, fAmount)
-                    deposit_rune(phrase, sAmount)
+                    deposit_btc(phrase, fAmount, network)
+                    deposit_rune(phrase, sAmount, network)
                 } else if(multichain === "BCHRUNE") {
-                    deposit_bch(phrase, fAmount)
-                    deposit_rune(phrase, sAmount)
+                    deposit_bch(phrase, fAmount, network)
+                    deposit_rune(phrase, sAmount, network)
                 } else if(multichain === "BNBRUNE") {
-                    deposit_bnb(phrase, fAmount)
-                    deposit_rune(phrase, sAmount)
+                    deposit_bnb(phrase, fAmount, network)
+                    deposit_rune(phrase, sAmount, network)
                 } else if(multichain === "LTCRUNE") {
-                    deposit_ltc(phrase, fAmount)
-                    deposit_rune(phrase, sAmount) 
+                    deposit_ltc(phrase, fAmount, network)
+                    deposit_rune(phrase, sAmount, network) 
                 } else if(multichain === "ETHRUNE") {
-                    deposit_eth(phrase, fAmount)
-                    deposit_rune(phrase, sAmount) 
+                    deposit_eth(phrase, fAmount, network)
+                    deposit_rune(phrase, sAmount, network) 
                 } else if(multichain === "BUSDRUNE") {
-                    deposit_busd(phrase, fAmount)
-                    deposit_rune(phrase, sAmount) 
+                    deposit_busd(phrase, fAmount, network)
+                    deposit_rune(phrase, sAmount, network) 
                 } else if(multichain === "USDTRUNE") {
-                    deposit_usdt(phrase, fAmount)
-                    deposit_rune(phrase, sAmount)
+                    deposit_usdt(phrase, fAmount, network)
+                    deposit_rune(phrase, sAmount, network)
                 }
             } else {
-                deposit_rune(phrase, sAmount, chain)
+                deposit_rune(phrase, sAmount, network, chain)
             }
         } else{
             alert("Plz connect wallet!")
@@ -284,10 +291,10 @@ const Content = ({ phrase }) => {
                     </Grid>
                     <Grid container className="token">
                         <Grid item xs={10} xl={10}>
-                            <Grid>{`ADD ${fAmount}`}</Grid>
+                            <Grid>{`ADD ${fAmount?fAmount:0}`}</Grid>
                             <Grid container>
                                 <Grid item xs={9} xl={9}>
-                                    <input type="number" value={fAmount} onChange = {(e) => onChangeFirst(e.target.value)} className="amount-input"></input>
+                                    <input type="number" value={fAmount?fAmount:""} onChange = {(e) => onChangeFirst(e.target.value)} className="amount-input"></input>
                                 </Grid>
                                 <Grid item xs={3} xl={3}>
                                     <Button variant="outlined">MAX</Button> 
@@ -298,10 +305,10 @@ const Content = ({ phrase }) => {
                     </Grid>
                     <Grid container className="token">
                         <Grid item xs={10} xl={10}>
-                            <Grid>{`ADD ${sAmount}`}</Grid>
+                            <Grid>{`ADD ${sAmount?sAmount:0}`}</Grid>
                             <Grid container>
                                 <Grid item xs={9} xl={9}>
-                                    <input type="number" value={sAmount} onChange = {(e) => onChangeSecond(e.target.value)} className="amount-input"></input>
+                                    <input type="number" value={sAmount?sAmount:""} onChange = {(e) => onChangeSecond(e.target.value)} className="amount-input"></input>
                                 </Grid>
                                 <Grid item xs={3} xl={3}>
                                     <Button variant="outlined">MAX</Button> 

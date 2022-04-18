@@ -9,21 +9,22 @@ import ListItem from "@mui/material/ListItem";
 import IconButton from "@mui/material/IconButton";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
-
-
+import CloseIcon from "@mui/icons-material/Close";
 
 // Import Assets
 import useStyles from "../assets/constants/styles";
 // Import Icons
-import CloseIcon from "@mui/icons-material/Close";
 import crypto from 'crypto'
 import * as bip39 from 'bip39'
 import { blake256 } from 'foundry-primitives'
+import { useDispatch } from "react-redux";
+import { onsave_phrase } from "../redux/actions/provider";
 
 
 const Keystore = ({ isOpen, setIsOpen, setPhrase }) => {
     const classes = useStyles();
-    const hashFunction = 'sha256'
+    const dispatch = useDispatch();
+    const hashFunction = 'sha256';
     let fileReader;
    
     const [password, setPassword] = useState('');
@@ -113,12 +114,12 @@ const Keystore = ({ isOpen, setIsOpen, setPhrase }) => {
         const content = fileReader.result;
         console.log((content))
         let phrase = await decryptFromKeystore(JSON.parse(content), decryptionpass)
-        console.log(`Phrase: ${phrase}`)
         setPhrase(phrase);
+        dispatch(onsave_phrase(phrase))
         let seed = getSeed(phrase)
         console.log(seed, "seed")
         setIsOpen(false);
-      };
+    };
       
     const handleFileChosen = (file) => {
         if(!file) {

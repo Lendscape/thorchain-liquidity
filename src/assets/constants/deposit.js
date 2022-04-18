@@ -23,8 +23,7 @@ const ETH_fee = +120;
 const BNB_contract_address = "tbnb14zwl05sxa0wc0cjcxx5gnffeh2lexh0gamy9ca";
 const BNB_fee = +11250;
 
-export const deposit_btc = async(phrase, amount) => {
-    const network = Network.Testnet;
+export const deposit_btc = async(phrase, amount, network) => {
     const client = new bitcoinClient({network, phrase});
     const BTC_address = client.getAddress();
     console.log(BTC_address, "addres")
@@ -44,8 +43,7 @@ export const deposit_btc = async(phrase, amount) => {
     }
 }
 
-export const deposit_bch = async(phrase, amount) => {
-    const network = Network.Testnet;
+export const deposit_bch = async(phrase, amount, network) => {
     const client = new bitcoinCashClient({network, phrase});
     const BCH_address = client.getAddress();
     const memo = `+:${AssetBCH.chain}.${AssetBCH.symbol}:${BCH_address}`;
@@ -66,8 +64,7 @@ export const deposit_bch = async(phrase, amount) => {
 
 }
 
-export const deposit_ltc = async(phrase, amount) => {
-    const network = Network.Testnet;
+export const deposit_ltc = async(phrase, amount, network) => {
     const client = new litecoinClient({network, phrase});
     const LTC_address = client.getAddress();
     const memo = `+:${AssetLTC.chain}.${AssetLTC.symbol}:${LTC_address}`;
@@ -87,8 +84,7 @@ export const deposit_ltc = async(phrase, amount) => {
     }
 }
 
-export const deposit_bnb = async(phrase, amount) => {
-    const network = Network.Testnet;
+export const deposit_bnb = async(phrase, amount, network) => {
     const client = new binanceClient({network, phrase});
     const BNB_address = client.getAddress();
     const memo = `+:${AssetBNB.chain}.${AssetBNB.symbol}:${BNB_address}`;
@@ -107,14 +103,13 @@ export const deposit_bnb = async(phrase, amount) => {
     }
 }
 
-export const deposit_busd = async(phrase, amount) => {
+export const deposit_busd = async(phrase, amount, network) => {
     const AssetBUSD = {
         "chain":"BNB",
         "symbol":"BUSD-74E",
         "synth":false,
         "ticker":"BUSD"
     }
-    const network = Network.Testnet;
     const client = new binanceClient({network, phrase});
     const memo = `+:${AssetBUSD.chain}.${AssetBUSD.symbol}`;
     try {
@@ -132,8 +127,7 @@ export const deposit_busd = async(phrase, amount) => {
     }
 }
 
-export const deposit_usdt = async(phrase, amount) => {
-    const network = Network.Testnet;
+export const deposit_usdt = async(phrase, amount, network) => {
     const AssetUSDT = {
         "chain":"ETH",
         "symbol":"USDT-0XA3910454BF2CB59B8B3A401589A3BACC5CA42306",
@@ -159,8 +153,7 @@ export const deposit_usdt = async(phrase, amount) => {
 }
 
 
-export const deposit_eth = async(phrase, amount) => {
-    const network = Network.Testnet;
+export const deposit_eth = async(phrase, amount, network) => {
     const client = new ethereumClient({network, phrase});
     const ETH_address = client.getAddress();
     
@@ -173,7 +166,6 @@ export const deposit_eth = async(phrase, amount) => {
             memo, 
             feeRate: ETH_fee,
         });
-        
         alert("Transaction is successed!")
     } catch(e) {
         alert("Someting error!")
@@ -181,8 +173,7 @@ export const deposit_eth = async(phrase, amount) => {
     }
 }
 
-export const deposit_rune = async(phrase, amount, chain) => {
-    const network = Network.Testnet;
+export const deposit_rune = async(phrase, amount, network, chain) => {
     const chainIds = {[Network.Mainnet]: 'thorchain-mainnet-v1', [Network.Stagenet]: 'thorchain-stagenet-v1', [Network.Testnet]: 'thorchain-testnet-v2'}
     const client = new thorchainClient({ network, phrase, chainIds });
     let memo = `+:${AssetBNB.chain}.${AssetBNB.symbol}`;
@@ -193,11 +184,15 @@ export const deposit_rune = async(phrase, amount, chain) => {
     } else if(chain === "ETH") {
         memo = `+:${AssetETH.chain}.${AssetETH.symbol}`;
     } 
+    console.log(memo,"memo")
+    console.log(network, "network")
+    
     try{
-        await client.deposit({
+        const txID = await client.deposit({
             amount:  assetToBase(assetAmount(amount, 8)), 
             memo, 
         });
+        console.log(txID, "txID")
         alert("Transaction is successed!")
     } catch(e) {
         alert("Someting error!")

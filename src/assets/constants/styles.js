@@ -6,7 +6,7 @@ const useStyles = makeStyles((theme) => {
         Header:{
             margin: theme.spacing(2,0),
             display: "flex",
-            justifyContent: "end"
+            justifyContent: "space-evenly"
         },
         Content:{
             height:"100vh",
