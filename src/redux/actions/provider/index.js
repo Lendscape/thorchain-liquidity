@@ -1,5 +1,4 @@
-import { NETWORK, PHRASE } from "../../constants";
-
+import { NETWORK, PHRASE, POOLDATA } from "../../constants";
 
 export const onchange_network = (params) => {
     return (dispatch) => {
@@ -7,8 +6,8 @@ export const onchange_network = (params) => {
             type: NETWORK,
             payload: { network: params },
         });
-    }
-}
+    };
+};
 
 export const onsave_phrase = (params) => {
     return (dispatch) => {
@@ -16,5 +15,14 @@ export const onsave_phrase = (params) => {
             type: PHRASE,
             payload: { phrase: params },
         });
-    }
-}
+    };
+};
+
+export const onsave_pooldata = (params) => {
+    return (dispatch) => {
+        dispatch({
+            type: POOLDATA,
+            payload: { phrase: params },
+        });
+    };
+};

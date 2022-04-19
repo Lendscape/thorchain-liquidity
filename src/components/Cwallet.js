@@ -8,7 +8,7 @@ import Dialog from "@mui/material/Dialog";
 import ListItem from "@mui/material/ListItem";
 import IconButton from "@mui/material/IconButton";
 import DialogTitle from "@mui/material/DialogTitle";
-import ListItemIcon from "@mui/material/ListItemIcon";  
+import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import DialogContent from "@mui/material/DialogContent";
 // Import Assets
@@ -21,11 +21,11 @@ const Cwallet = ({ isOpen, setIsOpen, setPhrase, network }) => {
     const classes = useStyles();
 
     const [keystoreConnector, setKeystoreConnector] = useState(false);
-   
+
     const onThorchainConnect = async () => {
         handleClose();
         setKeystoreConnector(true);
-    }
+    };
 
     const handleClose = () => {
         setIsOpen(false);
@@ -39,13 +39,11 @@ const Cwallet = ({ isOpen, setIsOpen, setPhrase, network }) => {
                 maxWidth="xs"
                 className={classes.cWallet}
                 classes={{
-                    paper: "cwallet-paper"
+                    paper: "cwallet-paper",
                 }}
             >
                 <Box className="title">
-                    <DialogTitle color="black">
-                        Select Wallet
-                    </DialogTitle>
+                    <DialogTitle color="black">Select Wallet</DialogTitle>
                     <IconButton
                         onClick={() => {
                             setIsOpen(false);
@@ -81,11 +79,15 @@ const Cwallet = ({ isOpen, setIsOpen, setPhrase, network }) => {
                     }
                 </DialogContent>
             </Dialog>
-            {
-                keystoreConnector ?
-                <Keystore isOpen={keystoreConnector} setIsOpen={setKeystoreConnector} setPhrase={setPhrase} /> :''
-            }
-            
+            {keystoreConnector ? (
+                <Keystore
+                    isOpen={keystoreConnector}
+                    setIsOpen={setKeystoreConnector}
+                    setPhrase={setPhrase}
+                />
+            ) : (
+                ""
+            )}
         </>
     );
 };

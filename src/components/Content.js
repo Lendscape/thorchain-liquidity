@@ -69,6 +69,14 @@ const Content = () => {
         setIsOpen(false);
     };
 
+    const getDateformat = (val) => {
+        const timestamp = Number(val) * 1000;
+        const y = new Date(timestamp).getFullYear();
+        const m = new Date(timestamp).getMonth();
+        const d = new Date(timestamp).getDate();
+        return `${y}-${m}-${d}`;
+    };
+
     const onChangeFirst = (value) => {
         setFAmount(value);
         if (choose === 2) {
@@ -117,15 +125,7 @@ const Content = () => {
                     : network_val === 2
                     ? Network.Mainnet
                     : Network.Stagenet;
-            // getPoolInfo(network, phrase);
-            const BCH_client = new bitcoinCashClient({ network, phrase });
-            const BCH_address = BCH_client.getAddress();
-            const BTC_client = new bitcoinClient({ network, phrase });
-            const BTC_address = BTC_client.getAddress();
-            const BNB_client = new binanceClient({ network, phrase });
-            const BNB_address = BNB_client.getAddress();
-            const ETH_client = new ethereumClient({ network, phrase });
-            const ETH_address = ETH_client.getAddress();
+
             const chainIds = {
                 [Network.Mainnet]: "thorchain-mainnet-v1",
                 [Network.Stagenet]: "thorchain-stagenet-v1",
@@ -138,53 +138,12 @@ const Content = () => {
             });
             const RUNE_address = RUNE_client.getAddress();
             try {
-                const BTC_list = await axios.get(
-                    `https://testnet.midgard.thorchain.info/v2/member/${BTC_address}`
-                );
-                if (BTC_list.data) {
-                    setBTCList(BTC_list.data.pools);
-                }
-            } catch (e) {
-                console.log(e);
-            }
-            try {
-                const BNB_list = await axios.get(
-                    `https://testnet.midgard.thorchain.info/v2/member/${BNB_address}`
-                );
-                if (BNB_list.data) {
-                    setBNBList(BNB_list.data.pools);
-                }
-            } catch (e) {
-                console.log(e);
-            }
-            try {
-                const ETH_list = await axios.get(
-                    `https://testnet.midgard.thorchain.info/v2/member/${ETH_address}`
-                );
-                if (ETH_list.data) {
-                    setETHList(ETH_list.data.pools);
-                }
-            } catch (e) {
-                console.log(e);
-            }
-            try {
                 const RUNE_list = await axios.get(
                     `https://testnet.midgard.thorchain.info/v2/member/${RUNE_address}`
                 );
                 if (RUNE_list.data) {
                     console.log(RUNE_list.data.pools, "runelist");
                     setRUNEList(RUNE_list.data.pools);
-                }
-            } catch (e) {
-                console.log(e);
-            }
-            try {
-                const BCH_list = await axios.get(
-                    `https://testnet.midgard.thorchain.info/v2/member/${BCH_address}`
-                );
-                if (BCH_list.data) {
-                    console.log(BCH_list.data.pools, "bchlist");
-                    setBCHList(BCH_list.data.pools);
                 }
             } catch (e) {
                 console.log(e);
@@ -414,7 +373,10 @@ const Content = () => {
                 </Box>
             ) : (
                 <Box id="content" className={classes.Content}>
-                    <Box className="content-box">
+                    <Box
+                        className="content-box"
+                        style={{ overflowY: "scroll" }}
+                    >
                         <Grid container className="content-header">
                             <Button onClick={() => setpagetype("deposit")}>
                                 DEPOSIT
@@ -428,7 +390,6 @@ const Content = () => {
                         </Grid>
                         {RUNEList && RUNEList.length > 0 ? (
                             <Grid>
-                                RUNE
                                 {RUNEList.map((item, index) => (
                                     <Grid
                                         container
@@ -436,301 +397,234 @@ const Content = () => {
                                         display="flex"
                                         justifyContent={"space-around"}
                                     >
-                                        <Grid item xs={3} xl={3}>
-                                            {Number(item["runeAdded"]) /
-                                                10 ** 8}
-                                            RUNE
+                                        <Grid item xs={12} xl={12}>
+                                            - {item.pool.split(".")[0]}
                                         </Grid>
-                                        <Grid item xs={5} xl={5}>
-                                            <input
-                                                type="number"
-                                                id="runeAmount"
-                                                placeholder="withdraw amount"
-                                                style={{ width: "100%" }}
-                                            ></input>
-                                        </Grid>
-                                        <Grid item xs={3} xl={3}>
-                                            <Button
-                                                onClick={() =>
-                                                    Withdraw(
-                                                        "RUNE",
-                                                        item.pool,
-                                                        Number(
-                                                            item["runeAdded"]
-                                                        ) /
-                                                            10 ** 8,
-                                                        Number(
-                                                            document.getElementById(
-                                                                "runeAmount"
-                                                            ).value
-                                                        )
-                                                    )
-                                                }
-                                            >
-                                                Withdraw
-                                            </Button>
-                                        </Grid>
-                                    </Grid>
-                                ))}
-                            </Grid>
-                        ) : (
-                            ""
-                        )}
-                        {BNBList && BNBList.length > 0 ? (
-                            <Grid>
-                                BNB
-                                {BNBList.map((item, index) => (
-                                    <Grid
-                                        container
-                                        key={index}
-                                        display="flex"
-                                        justifyContent={"space-around"}
-                                    >
-                                        <Grid item xs={3} xl={3}>
-                                            {Number(item["assetAdded"]) /
-                                                10 ** 8}
-                                            {item.pool === "BNB.BNB"
-                                                ? "BNB"
-                                                : "BUSD"}
-                                        </Grid>
-                                        <Grid item xs={5} xl={5}>
-                                            <input
-                                                type="number"
-                                                id="bnbAmount"
-                                                placeholder="withdraw amount"
-                                                style={{ width: "100%" }}
-                                            ></input>
-                                        </Grid>
-                                        {item.pool === "BNB.BNB" ? (
-                                            <Grid item xs={3} xl={3}>
-                                                <Button
-                                                    onClick={() =>
-                                                        Withdraw(
-                                                            "BNB",
-                                                            item.pool,
-                                                            Number(
-                                                                item[
-                                                                    "assetAdded"
-                                                                ]
-                                                            ) /
-                                                                10 ** 10,
-                                                            Number(
-                                                                document.getElementById(
-                                                                    "bnbAmount"
-                                                                ).value
-                                                            )
-                                                        )
-                                                    }
+                                        {Number(item.assetAdded) !== 0 ? (
+                                            <Grid container>
+                                                <Grid item xs={12} xl={12}>
+                                                    {item.pool.split(".")[1]} LP
+                                                </Grid>
+                                                <Grid
+                                                    item
+                                                    xs={12}
+                                                    xl={12}
+                                                    style={{
+                                                        display: "flex",
+                                                        justifyContent:
+                                                            "space-between",
+                                                    }}
                                                 >
-                                                    Withdraw
-                                                </Button>
+                                                    <Grid item xs={6} xl={6}>
+                                                        {
+                                                            item.pool.split(
+                                                                "."
+                                                            )[1]
+                                                        }{" "}
+                                                        Share:
+                                                    </Grid>
+                                                    <Grid item xs={6} xl={6}>
+                                                        {item.assetAdded /
+                                                            10 ** 8}
+                                                    </Grid>
+                                                </Grid>
+                                                <Grid
+                                                    item
+                                                    xs={12}
+                                                    xl={12}
+                                                    style={{
+                                                        display: "flex",
+                                                        justifyContent:
+                                                            "space-between",
+                                                    }}
+                                                >
+                                                    <Grid item xs={6} xl={6}>
+                                                        Lp units:
+                                                    </Grid>
+                                                    <Grid item xs={6} xl={6}>
+                                                        {item.liquidityUnits /
+                                                            10 ** 8}
+                                                    </Grid>
+                                                </Grid>
+                                                <Grid
+                                                    item
+                                                    xs={12}
+                                                    xl={12}
+                                                    style={{
+                                                        display: "flex",
+                                                        justifyContent:
+                                                            "space-between",
+                                                    }}
+                                                >
+                                                    <Grid item xs={6} xl={6}>
+                                                        Last Added:
+                                                    </Grid>
+                                                    <Grid item xs={6} xl={6}>
+                                                        {getDateformat(
+                                                            item.dateLastAdded
+                                                        )}
+                                                    </Grid>
+                                                </Grid>
+                                                <Grid
+                                                    item
+                                                    xs={12}
+                                                    xl={12}
+                                                    style={{
+                                                        display: "flex",
+                                                        justifyContent:
+                                                            "space-between",
+                                                    }}
+                                                >
+                                                    <Grid item xs={6} xl={6}>
+                                                        <input
+                                                            type="number"
+                                                            id="assetAmount"
+                                                            placeholder="withdraw amount"
+                                                            style={{
+                                                                width: "100%",
+                                                            }}
+                                                        ></input>
+                                                    </Grid>
+                                                    <Grid item xs={6} xl={6}>
+                                                        <Button
+                                                            onClick={() =>
+                                                                Withdraw(
+                                                                    item.pool.split(
+                                                                        "."
+                                                                    )[1],
+                                                                    item.pool,
+                                                                    Number(
+                                                                        item[
+                                                                            "assetAdded"
+                                                                        ]
+                                                                    ) /
+                                                                        10 ** 8,
+                                                                    Number(
+                                                                        document.getElementById(
+                                                                            "assetAdded"
+                                                                        ).value
+                                                                    )
+                                                                )
+                                                            }
+                                                        >
+                                                            Withdraw
+                                                        </Button>
+                                                    </Grid>
+                                                </Grid>
                                             </Grid>
                                         ) : (
-                                            <Grid item xs={3} xl={3}>
-                                                <Button
-                                                    onClick={() =>
-                                                        Withdraw(
-                                                            "BUSD",
-                                                            item.pool,
-                                                            Number(
-                                                                item[
-                                                                    "assetAdded"
-                                                                ]
-                                                            ) /
-                                                                10 ** 10,
-                                                            Number(
-                                                                document.getElementById(
-                                                                    "bnbAmount"
-                                                                ).value
-                                                            )
-                                                        )
-                                                    }
-                                                >
-                                                    Withdraw
-                                                </Button>
-                                            </Grid>
+                                            ""
                                         )}
-                                    </Grid>
-                                ))}
-                            </Grid>
-                        ) : (
-                            ""
-                        )}
-                        {ETHList && ETHList.length > 0 ? (
-                            <Grid>
-                                ETH
-                                {ETHList.map((item, index) => (
-                                    <Grid
-                                        container
-                                        key={index}
-                                        display="flex"
-                                        justifyContent={"space-around"}
-                                    >
-                                        <Grid item xs={9} xl={9}>
-                                            {Number(item["assetAdded"]) /
-                                                10 ** 8}
-                                            {item.pool === "ETH.ETH"
-                                                ? "ETH"
-                                                : "USDT"}
-                                        </Grid>
-                                        <Grid item xs={5} xl={5}>
-                                            <input
-                                                type="number"
-                                                id="ethAmount"
-                                                placeholder="withdraw amount"
-                                                style={{ width: "100%" }}
-                                            ></input>
-                                        </Grid>
-                                        {item.pool === "ETH.ETH" ? (
-                                            <Grid item xs={3} xl={3}>
-                                                <Button
-                                                    onClick={() =>
-                                                        Withdraw(
-                                                            "ETH",
-                                                            item.pool,
-                                                            Number(
-                                                                item[
-                                                                    "assetAdded"
-                                                                ]
-                                                            ) /
-                                                                10 ** 10,
-                                                            Number(
-                                                                document.getElementById(
-                                                                    "ethAmount"
-                                                                ).value
-                                                            )
-                                                        )
-                                                    }
-                                                >
-                                                    Withdraw
-                                                </Button>
-                                            </Grid>
-                                        ) : (
-                                            <Grid item xs={3} xl={3}>
-                                                <Button
-                                                    onClick={() =>
-                                                        Withdraw(
-                                                            "USDT",
-                                                            item.pool,
-                                                            Number(
-                                                                item[
-                                                                    "assetAdded"
-                                                                ]
-                                                            ) /
-                                                                10 ** 10,
-                                                            Number(
-                                                                document.getElementById(
-                                                                    "ethAmount"
-                                                                ).value
-                                                            )
-                                                        )
-                                                    }
-                                                >
-                                                    Withdraw
-                                                </Button>
-                                            </Grid>
-                                        )}
-                                    </Grid>
-                                ))}
-                            </Grid>
-                        ) : (
-                            ""
-                        )}
-                        {BTCList && BTCList.length > 0 ? (
-                            <Grid>
-                                BTC
-                                {BTCList.map((item, index) => (
-                                    <Grid
-                                        container
-                                        key={index}
-                                        display="flex"
-                                        justifyContent={"space-around"}
-                                    >
-                                        <Grid item xs={9} xl={9}>
-                                            {Number(item["assetAdded"]) /
-                                                10 ** 8}
-                                            BTC
-                                        </Grid>
-                                        <Grid item xs={5} xl={5}>
-                                            <input
-                                                type="number"
-                                                id="btcAmount"
-                                                placeholder="withdraw amount"
-                                                style={{ width: "100%" }}
-                                            ></input>
-                                        </Grid>
-                                        <Grid item xs={3} xl={3}>
-                                            <Button
-                                                onClick={() =>
-                                                    Withdraw(
-                                                        "BTC",
-                                                        item.pool,
-                                                        Number(
-                                                            item["assetAdded"]
-                                                        ) /
-                                                            10 ** 10,
-                                                        Number(
-                                                            document.getElementById(
-                                                                "btcAmount"
-                                                            ).value
-                                                        )
-                                                    )
-                                                }
-                                            >
-                                                Withdraw
-                                            </Button>
-                                        </Grid>
-                                    </Grid>
-                                ))}
-                            </Grid>
-                        ) : (
-                            ""
-                        )}
 
-                        {BCHList && BCHList.length > 0 ? (
-                            <Grid>
-                                BCH
-                                {BCHList.map((item, index) => (
-                                    <Grid
-                                        container
-                                        key={index}
-                                        display="flex"
-                                        justifyContent={"space-around"}
-                                    >
-                                        <Grid item xs={9} xl={9}>
-                                            {Number(item["assetAdded"]) /
-                                                10 ** 8}
-                                            BCH
-                                        </Grid>
-                                        <Grid item xs={5} xl={5}>
-                                            <input
-                                                type="number"
-                                                id="bchAmount"
-                                                placeholder="withdraw amount"
-                                                style={{ width: "100%" }}
-                                            ></input>
-                                        </Grid>
-                                        <Grid item xs={3} xl={3}>
-                                            <Button
-                                                onClick={() =>
-                                                    Withdraw(
-                                                        "BCH",
-                                                        item.pool,
-                                                        Number(
-                                                            item["assetAdded"]
-                                                        ) /
-                                                            10 ** 10,
-                                                        Number(
-                                                            document.getElementById(
-                                                                "bchAmount"
-                                                            ).value
-                                                        )
-                                                    )
-                                                }
-                                            >
-                                                Withdraw
-                                            </Button>
-                                        </Grid>
+                                        {Number(item.runeAdded) !== 0 ? (
+                                            <Grid container>
+                                                <Grid item xs={12} xl={12}>
+                                                    RUNE LP
+                                                </Grid>
+                                                <Grid
+                                                    item
+                                                    xs={12}
+                                                    xl={12}
+                                                    style={{
+                                                        display: "flex",
+                                                        justifyContent:
+                                                            "space-between",
+                                                    }}
+                                                >
+                                                    <Grid item xs={6} xl={6}>
+                                                        RUNE Share:
+                                                    </Grid>
+                                                    <Grid item xs={6} xl={6}>
+                                                        {item.runeAdded /
+                                                            10 ** 8}
+                                                    </Grid>
+                                                </Grid>
+                                                <Grid
+                                                    item
+                                                    xs={12}
+                                                    xl={12}
+                                                    style={{
+                                                        display: "flex",
+                                                        justifyContent:
+                                                            "space-between",
+                                                    }}
+                                                >
+                                                    <Grid item xs={6} xl={6}>
+                                                        Lp units:
+                                                    </Grid>
+                                                    <Grid item xs={6} xl={6}>
+                                                        {item.liquidityUnits /
+                                                            10 ** 8}
+                                                    </Grid>
+                                                </Grid>
+                                                <Grid
+                                                    item
+                                                    xs={12}
+                                                    xl={12}
+                                                    style={{
+                                                        display: "flex",
+                                                        justifyContent:
+                                                            "space-between",
+                                                    }}
+                                                >
+                                                    <Grid item xs={6} xl={6}>
+                                                        Last Added:
+                                                    </Grid>
+                                                    <Grid item xs={6} xl={6}>
+                                                        {getDateformat(
+                                                            item.dateLastAdded
+                                                        )}
+                                                    </Grid>
+                                                </Grid>
+
+                                                <Grid
+                                                    item
+                                                    xs={12}
+                                                    xl={12}
+                                                    style={{
+                                                        display: "flex",
+                                                        justifyContent:
+                                                            "space-between",
+                                                    }}
+                                                >
+                                                    <Grid item xs={6} xl={6}>
+                                                        <input
+                                                            type="number"
+                                                            id="runeAmount"
+                                                            placeholder="withdraw amount"
+                                                            style={{
+                                                                width: "100%",
+                                                            }}
+                                                        ></input>
+                                                    </Grid>
+                                                    <Grid item xs={6} xl={6}>
+                                                        <Button
+                                                            onClick={() =>
+                                                                Withdraw(
+                                                                    "RUNE",
+                                                                    item.pool,
+                                                                    Number(
+                                                                        item[
+                                                                            "runeAdded"
+                                                                        ]
+                                                                    ) /
+                                                                        10 ** 8,
+                                                                    Number(
+                                                                        document.getElementById(
+                                                                            "runeAmount"
+                                                                        ).value
+                                                                    )
+                                                                )
+                                                            }
+                                                        >
+                                                            Withdraw
+                                                        </Button>
+                                                    </Grid>
+                                                </Grid>
+                                            </Grid>
+                                        ) : (
+                                            ""
+                                        )}
                                     </Grid>
                                 ))}
                             </Grid>
