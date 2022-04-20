@@ -1,4 +1,12 @@
-import { NETWORK, PHRASE, POOLDATA } from "../../constants";
+import {
+    BCHADDRESS,
+    BNBADDRESS,
+    BTCADDRESS,
+    NETWORK,
+    PHRASE,
+    POOLDATA,
+    THORADDRESS,
+} from "../../constants";
 
 export const onchange_network = (params) => {
     return (dispatch) => {
@@ -23,6 +31,42 @@ export const onsave_pooldata = (params) => {
         dispatch({
             type: POOLDATA,
             payload: { phrase: params },
+        });
+    };
+};
+
+export const onsave_thoraddress = (params) => {
+    return (dispatch) => {
+        dispatch({
+            type: THORADDRESS,
+            payload: { thoraddress: params },
+        });
+    };
+};
+
+export const onsave_bnbaddress = (params) => {
+    return (dispatch) => {
+        dispatch({
+            type: BNBADDRESS,
+            payload: { bnbaddress: params },
+        });
+    };
+};
+
+export const onsave_bchaddress = (params) => {
+    return (dispatch) => {
+        dispatch({
+            type: BCHADDRESS,
+            payload: { bchaddress: params },
+        });
+    };
+};
+
+export const onsave_btcaddress = (params) => {
+    return (dispatch) => {
+        dispatch({
+            type: BTCADDRESS,
+            payload: { btcaddress: params },
         });
     };
 };

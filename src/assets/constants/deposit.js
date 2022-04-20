@@ -220,3 +220,96 @@ export const deposit_rune = async (phrase, amount, network, chain) => {
         console.log(e, "error");
     }
 };
+
+export const deposit_BitcoinBased_xdefi = async (
+    object,
+    from,
+    amount,
+    chain
+) => {
+    let memo = `+:${AssetBTC.chain}.${AssetBTC.symbol}:${from}`;
+    let to = BTC_contract_address;
+    let fee = BTC_fee;
+    if (chain === "BCH") {
+        memo = `+:${AssetBCH.chain}.${AssetBCH.symbol}:${from}`;
+        to = BCH_contract_address;
+        fee = BCH_fee;
+    } else if (chain === "BTC") {
+        memo = `+:${AssetBTC.chain}.${AssetBTC.symbol}:${from}`;
+        to = BTC_contract_address;
+        fee = BTC_fee;
+    }
+    object.request(
+        {
+            method: "deposit",
+            params: [
+                {
+                    from,
+                    recipient: to,
+                    feeRate: fee,
+                    amount,
+                    memo,
+                },
+            ],
+        },
+        (error, result) => {
+            console.debug(error, result);
+            this.lastResult = { error, result };
+        }
+    );
+};
+
+export const deposit_Binance_xdefi = async (object, from, amount) => {
+    const memo = `+:${AssetBNB.chain}.${AssetBNB.symbol}:${from}`;
+    object.request(
+        {
+            method: "deposit",
+            params: [
+                {
+                    asset: AssetBNB,
+                    from,
+                    recipient: BNB_contract_address,
+                    amount,
+                    memo,
+                },
+            ],
+        },
+        (error, result) => {
+            console.debug(error, result);
+            this.lastResult = { error, result };
+        }
+    );
+};
+
+export const deposit_ThorBased_xdefi = async (object, from, amount, chain) => {
+    let memo = `+:${AssetBTC.chain}.${AssetBTC.symbol}:${from}`;
+    let to = BTC_contract_address;
+    let asset = AssetBTC;
+    if (chain === "BCH") {
+        memo = `+:${AssetBCH.chain}.${AssetBCH.symbol}:${from}`;
+        to = BCH_contract_address;
+        asset = AssetBCH;
+    } else if (chain === "BTC") {
+        memo = `+:${AssetBTC.chain}.${AssetBTC.symbol}:${from}`;
+        to = BTC_contract_address;
+        asset = AssetBTC;
+    }
+    object.request(
+        {
+            method: "deposit",
+            params: [
+                {
+                    asset: asset,
+                    from,
+                    recipient: to,
+                    amount,
+                    memo,
+                },
+            ],
+        },
+        (error, result) => {
+            console.debug(error, result);
+            this.lastResult = { error, result };
+        }
+    );
+};

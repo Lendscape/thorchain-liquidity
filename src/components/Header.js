@@ -35,6 +35,9 @@ const Header = ({ phrase, setPhrase, setChainNetwork }) => {
     };
 
     useEffect(() => {
+        if (window.xfi) {
+            console.log(window.xfi, "xfi");
+        }
         if (phrase) {
             const network = Network.Testnet;
             const chainIds = {

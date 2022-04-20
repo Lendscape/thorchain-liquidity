@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Keystore from "./Keystore";
+import Xdefi from "./Xdefi";
 
 // Import Material UI Components
 import Box from "@mui/material/Box";
@@ -19,12 +20,19 @@ import { Wallets } from "../assets/constants/wallets";
 
 const Cwallet = ({ isOpen, setIsOpen, setPhrase, network }) => {
     const classes = useStyles();
+    const [xdefiConnector, setXdefiConnector] = useState(false);
 
     const [keystoreConnector, setKeystoreConnector] = useState(false);
 
-    const onThorchainConnect = async () => {
-        handleClose();
-        setKeystoreConnector(true);
+    const onThorchainConnect = async (item) => {
+        if (item.title === "XDEFI WALLET") {
+            console.log("sss");
+            handleClose();
+            setXdefiConnector(true);
+        } else {
+            handleClose();
+            setKeystoreConnector(true);
+        }
     };
 
     const handleClose = () => {
@@ -60,7 +68,7 @@ const Cwallet = ({ isOpen, setIsOpen, setPhrase, network }) => {
                                     <ListItem
                                         key={idx}
                                         className="item"
-                                        onClick={() => onThorchainConnect()}
+                                        onClick={() => onThorchainConnect(item)}
                                     >
                                         <ListItemIcon className="symbol">
                                             <img
@@ -85,6 +93,11 @@ const Cwallet = ({ isOpen, setIsOpen, setPhrase, network }) => {
                     setIsOpen={setKeystoreConnector}
                     setPhrase={setPhrase}
                 />
+            ) : (
+                ""
+            )}
+            {xdefiConnector ? (
+                <Xdefi isOpen={xdefiConnector} setIsOpen={setXdefiConnector} />
             ) : (
                 ""
             )}

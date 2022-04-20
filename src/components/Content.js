@@ -31,6 +31,9 @@ import {
     deposit_rune,
     deposit_busd,
     deposit_usdt,
+    deposit_Binance_xdefi,
+    deposit_ThorBased_xdefi,
+    deposit_BitcoinBased_xdefi,
 } from "../assets/constants/deposit";
 import {
     withdraw_bch,
@@ -59,7 +62,12 @@ const Content = () => {
     const [pagetype, setpagetype] = useState("deposit");
 
     const phrase = useSelector((store) => store.provider.phrase);
+    const bnb_address_xfi = useSelector((store) => store.provider.bnbaddress);
+    const bch_address_xfi = useSelector((store) => store.provider.bchaddress);
+    const btc_address_xfi = useSelector((store) => store.provider.btcaddress);
+    const thor_address_xfi = useSelector((store) => store.provider.thoraddress);
     let network_val = useSelector((store) => store.provider.network);
+    const xfiObject = window.xfi;
 
     const onItemClick = (item) => {
         setChain(item.title);
@@ -180,28 +188,99 @@ const Content = () => {
             } else if (choose === 2) {
                 if (multichain === "BTCRUNE") {
                     deposit_btc(phrase, fAmount, network);
-                    deposit_rune(phrase, sAmount, network);
+                    deposit_rune(phrase, sAmount, network, chain);
                 } else if (multichain === "BCHRUNE") {
                     deposit_bch(phrase, fAmount, network);
-                    deposit_rune(phrase, sAmount, network);
+                    deposit_rune(phrase, sAmount, network, chain);
                 } else if (multichain === "BNBRUNE") {
                     deposit_bnb(phrase, fAmount, network);
-                    deposit_rune(phrase, sAmount, network);
+                    deposit_rune(phrase, sAmount, network, chain);
                 } else if (multichain === "LTCRUNE") {
                     deposit_ltc(phrase, fAmount, network);
-                    deposit_rune(phrase, sAmount, network);
+                    deposit_rune(phrase, sAmount, network, chain);
                 } else if (multichain === "ETHRUNE") {
                     deposit_eth(phrase, fAmount, network);
-                    deposit_rune(phrase, sAmount, network);
+                    deposit_rune(phrase, sAmount, network, chain);
                 } else if (multichain === "BUSDRUNE") {
                     deposit_busd(phrase, fAmount, network);
-                    deposit_rune(phrase, sAmount, network);
+                    deposit_rune(phrase, sAmount, network, chain);
                 } else if (multichain === "USDTRUNE") {
                     deposit_usdt(phrase, fAmount, network);
-                    deposit_rune(phrase, sAmount, network);
+                    deposit_rune(phrase, sAmount, network, chain);
                 }
             } else {
                 deposit_rune(phrase, sAmount, network, chain);
+            }
+        } else if (window.xfi) {
+            if (choose === 1) {
+                if (chain === "BNB") {
+                    deposit_Binance_xdefi(
+                        xfiObject.binance,
+                        bnb_address_xfi,
+                        fAmount
+                    );
+                } else if (chain === "BCH") {
+                    deposit_BitcoinBased_xdefi(
+                        xfiObject.bitcoincash,
+                        bch_address_xfi,
+                        fAmount,
+                        "BCH"
+                    );
+                } else if (chain === "BTC") {
+                    deposit_BitcoinBased_xdefi(
+                        xfiObject.bitcoin,
+                        btc_address_xfi,
+                        fAmount,
+                        "BTC"
+                    );
+                }
+            } else if (choose === 2) {
+                if (multichain === "BTCRUNE") {
+                    deposit_BitcoinBased_xdefi(
+                        xfiObject.bitcoin,
+                        btc_address_xfi,
+                        fAmount,
+                        "BTC"
+                    );
+                    deposit_ThorBased_xdefi(
+                        xfiObject.thorchain,
+                        thor_address_xfi,
+                        sAmount,
+                        chain
+                    );
+                } else if (multichain === "BCHRUNE") {
+                    deposit_BitcoinBased_xdefi(
+                        xfiObject.bitcoincash,
+                        bch_address_xfi,
+                        fAmount,
+                        "BCH"
+                    );
+                    deposit_ThorBased_xdefi(
+                        xfiObject.thorchain,
+                        thor_address_xfi,
+                        sAmount,
+                        chain
+                    );
+                } else if (multichain === "BNBRUNE") {
+                    deposit_Binance_xdefi(
+                        xfiObject.binance,
+                        bnb_address_xfi,
+                        fAmount
+                    );
+                    deposit_ThorBased_xdefi(
+                        xfiObject.thorchain,
+                        thor_address_xfi,
+                        sAmount,
+                        chain
+                    );
+                }
+            } else {
+                deposit_ThorBased_xdefi(
+                    xfiObject.thorchain,
+                    thor_address_xfi,
+                    sAmount,
+                    chain
+                );
             }
         } else {
             alert("Plz connect wallet!");
