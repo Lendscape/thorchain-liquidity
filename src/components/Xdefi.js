@@ -63,6 +63,7 @@ const Cwallet = ({ isOpen, setIsOpen }) => {
             const lastResult = `Error: ${e.message}`;
             console.log(lastResult, "result");
         }
+        setIsOpen(false);
     };
 
     const handleClose = () => {

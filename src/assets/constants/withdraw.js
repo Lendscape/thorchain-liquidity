@@ -1,11 +1,28 @@
-import { Client as bitcoinCashClient, BCH_DECIMAL } from '@xchainjs/xchain-bitcoincash';
-import { Client as bitcoinClient} from "@xchainjs/xchain-bitcoincash"
-import { Client as binanceClient} from "@xchainjs/xchain-binance"
-import { Client as ethereumClient, ETH_DECIMAL} from "@xchainjs/xchain-ethereum"
-import { Client as litecoinClient, LTC_DECIMAL} from "@xchainjs/xchain-litecoin"
-import { Client as thorchainClient } from "@xchainjs/xchain-thorchain"
-import { AssetBCH, AssetETH, AssetLTC, AssetBTC, AssetBNB, assetToBase, assetAmount } from '@xchainjs/xchain-util';
-import { Network } from '@xchainjs/xchain-client';
+import {
+    Client as bitcoinCashClient,
+    BCH_DECIMAL,
+} from "@xchainjs/xchain-bitcoincash";
+import { Client as bitcoinClient } from "@xchainjs/xchain-bitcoincash";
+import { Client as binanceClient } from "@xchainjs/xchain-binance";
+import {
+    Client as ethereumClient,
+    ETH_DECIMAL,
+} from "@xchainjs/xchain-ethereum";
+import {
+    Client as litecoinClient,
+    LTC_DECIMAL,
+} from "@xchainjs/xchain-litecoin";
+import { Client as thorchainClient } from "@xchainjs/xchain-thorchain";
+import {
+    AssetBCH,
+    AssetETH,
+    AssetLTC,
+    AssetBTC,
+    AssetBNB,
+    assetToBase,
+    assetAmount,
+} from "@xchainjs/xchain-util";
+import { Network } from "@xchainjs/xchain-client";
 
 const BCH_contract_address = "qz5fma7jqm4amplztqc63zd98xatly6aaqz0uk520w";
 const BCH_fee = +3;
@@ -22,135 +39,229 @@ const ETH_fee = +120;
 const BNB_contract_address = "tbnb14zwl05sxa0wc0cjcxx5gnffeh2lexh0gamy9ca";
 const BNB_fee = +11250;
 
-const BUSD_contract_address = "tbnb122wuescegyq3q47jfthzqvtk7f32j422lze084"
+const BUSD_contract_address = "tbnb122wuescegyq3q47jfthzqvtk7f32j422lze084";
 
-export const withdraw_btc = async(phrase,pool,amount) => {
+export const withdraw_btc = async (phrase, pool, amount) => {
     const network = Network.Testnet;
-    const client = new bitcoinClient({network, phrase});
+    const client = new bitcoinClient({ network, phrase });
     const memo = `-:${AssetBTC.chain}.${AssetBTC.symbol}:${10000}`;
     await client.transfer({
         asset: AssetBTC,
-        amount: assetToBase(assetAmount(amount,8)),
+        amount: assetToBase(assetAmount(amount, 8)),
         recipient: BTC_contract_address,
         memo,
         feeRate: BTC_fee,
     });
-}
+};
 
-export const withdraw_bch = async(phrase,pool,amount) => {
+export const withdraw_bch = async (phrase, pool, amount) => {
     const network = Network.Testnet;
-    const client = new bitcoinCashClient({network, phrase});
+    const client = new bitcoinCashClient({ network, phrase });
     const memo = `-:${AssetBCH.chain}.${AssetBCH.symbol}:${10000}`;
-    console.log(memo, "memo")
+    console.log(memo, "memo");
     await client.transfer({
         asset: AssetBCH,
         amount: assetToBase(assetAmount(amount, BCH_DECIMAL)),
-        recipient: BCH_contract_address, 
-        memo, 
-        feeRate: BCH_fee, 
-    });    
-
-}
-
-
-export const withdraw_busd = async(phrase,pool,amount) => {
-    const AssetBUSD = {
-        "chain":"BNB",
-        "symbol":"BUSD-74E",
-        "synth":false,
-        "ticker":"BUSD"
-    }
-    const network = Network.Testnet;
-    const client = new binanceClient({network, phrase});
-    const memo = `-:${AssetBUSD.chain}.${AssetBUSD.symbol}:${10000}`;
-     client.transfer({
-        asset: AssetBUSD, 
-        amount: assetToBase(assetAmount(amount, ETH_DECIMAL)),
-        recipient: BUSD_contract_address, 
-        memo, 
-        feeRate: BNB_fee, 
+        recipient: BCH_contract_address,
+        memo,
+        feeRate: BCH_fee,
     });
-}
+};
 
-export const withdraw_usdt = async(phrase,pool,amount) => {
+export const withdraw_busd = async (phrase, pool, amount) => {
+    const AssetBUSD = {
+        chain: "BNB",
+        symbol: "BUSD-74E",
+        synth: false,
+        ticker: "BUSD",
+    };
+    const network = Network.Testnet;
+    const client = new binanceClient({ network, phrase });
+    const memo = `-:${AssetBUSD.chain}.${AssetBUSD.symbol}:${10000}`;
+    client.transfer({
+        asset: AssetBUSD,
+        amount: assetToBase(assetAmount(amount, ETH_DECIMAL)),
+        recipient: BUSD_contract_address,
+        memo,
+        feeRate: BNB_fee,
+    });
+};
+
+export const withdraw_usdt = async (phrase, pool, amount) => {
     const network = Network.Testnet;
     const AssetUSDT = {
-        "chain":"ETH",
-        "symbol":"USDT-0XA3910454BF2CB59B8B3A401589A3BACC5CA42306",
-        "synth":false,
-        "ticker":"USDT"
-    }
-    const client = new ethereumClient({network, phrase});
+        chain: "ETH",
+        symbol: "USDT-0XA3910454BF2CB59B8B3A401589A3BACC5CA42306",
+        synth: false,
+        ticker: "USDT",
+    };
+    const client = new ethereumClient({ network, phrase });
     const memo = `-:${AssetUSDT.chain}.${AssetUSDT.symbol}:${10000}`;
     await client.transfer({
-        asset: AssetUSDT, 
-        amount: assetToBase(assetAmount(amount, ETH_DECIMAL)), 
+        asset: AssetUSDT,
+        amount: assetToBase(assetAmount(amount, ETH_DECIMAL)),
         recipient: ETH_contract_address,
-        memo, 
+        memo,
         feeRate: ETH_fee,
     });
-}
+};
 
-export const withdraw_ltc = async(phrase,pool,amount) => {
+export const withdraw_ltc = async (phrase, pool, amount) => {
     const network = Network.Testnet;
-    const client = new litecoinClient({network, phrase});
+    const client = new litecoinClient({ network, phrase });
     const memo = `-:${AssetLTC.chain}.${AssetLTC.symbol}:${10000}`;
     await client.transfer({
-        asset: AssetLTC, 
-        amount: assetToBase(assetAmount(amount, LTC_DECIMAL)), 
+        asset: AssetLTC,
+        amount: assetToBase(assetAmount(amount, LTC_DECIMAL)),
         recipient: LTC_contract_address,
         memo,
-        feeRate: LTC_fee, 
-    });    
-}
+        feeRate: LTC_fee,
+    });
+};
 
-export const withdraw_bnb = async(phrase,pool, amount) => {
+export const withdraw_bnb = async (phrase, pool, amount) => {
     const network = Network.Testnet;
-    const client = new binanceClient({network, phrase});
+    const client = new binanceClient({ network, phrase });
     const BNB_address = client.getAddress();
     const memo = `-:${AssetBNB.chain}.${AssetBNB.symbol}:${BNB_address}`;
     try {
-         client.transfer({
-            asset: AssetBNB, 
+        client.transfer({
+            asset: AssetBNB,
             amount: assetToBase(assetAmount(amount, ETH_DECIMAL)),
-            recipient: BNB_contract_address, 
-            memo, 
-            feeRate: BNB_fee, 
+            recipient: BNB_contract_address,
+            memo,
+            feeRate: BNB_fee,
         });
-        alert("Transaction is successed!")
-    } catch(e) {
-        alert("Someting error!")
-        console.log(e)
+        alert("Transaction is successed!");
+    } catch (e) {
+        alert("Someting error!");
+        console.log(e);
     }
-}
+};
 
-
-export const withdraw_eth = async(phrase,pool,amount) => {
+export const withdraw_eth = async (phrase, pool, amount) => {
     const network = Network.Testnet;
-    const client = new ethereumClient({network, phrase});
+    const client = new ethereumClient({ network, phrase });
     const memo = `-:${AssetETH.chain}.${AssetETH.symbol}:${10000}`;
     await client.transfer({
-        asset: AssetETH, 
-        amount: assetToBase(assetAmount(amount, ETH_DECIMAL)), 
+        asset: AssetETH,
+        amount: assetToBase(assetAmount(amount, ETH_DECIMAL)),
         recipient: ETH_contract_address,
-        memo, 
+        memo,
         feeRate: ETH_fee,
-    }); 
-}
+    });
+};
 
-export const withdraw_rune = async(phrase, pool, amount) => {
+export const withdraw_rune = async (phrase, pool, amount) => {
     const network = Network.Testnet;
-    const chainIds = {[Network.Mainnet]: 'thorchain-mainnet-v1', [Network.Stagenet]: 'thorchain-stagenet-v1', [Network.Testnet]: 'thorchain-testnet-v2'}
+    const chainIds = {
+        [Network.Mainnet]: "thorchain-mainnet-v1",
+        [Network.Stagenet]: "thorchain-stagenet-v1",
+        [Network.Testnet]: "thorchain-testnet-v2",
+    };
     const client = new thorchainClient({ network, phrase, chainIds });
-   	const memo = `-:${pool}:${10000}`
-    try{
+    const memo = `-:${pool}:${10000}`;
+    try {
         await client.deposit({
-            amount: assetToBase(assetAmount(amount, 8)), 
-            memo, 
+            amount: assetToBase(assetAmount(amount, 8)),
+            memo,
         });
-        alert("transaction success")
-    }catch(e) {
-        console.log(e)
-        alert("Something error")
+        alert("transaction success");
+    } catch (e) {
+        console.log(e);
+        alert("Something error");
     }
-}
+};
+
+export const withdraw_BitcoinBased_xdefi = async (
+    object,
+    from,
+    amount,
+    chain
+) => {
+    let memo = `+:${AssetBTC.chain}.${AssetBTC.symbol}:${from}`;
+    let to = BTC_contract_address;
+    let fee = BTC_fee;
+    if (chain === "BCH") {
+        memo = `+:${AssetBCH.chain}.${AssetBCH.symbol}:${from}`;
+        to = BCH_contract_address;
+        fee = BCH_fee;
+    } else if (chain === "BTC") {
+        memo = `+:${AssetBTC.chain}.${AssetBTC.symbol}:${from}`;
+        to = BTC_contract_address;
+        fee = BTC_fee;
+    }
+    object.request(
+        {
+            method: "deposit",
+            params: [
+                {
+                    from,
+                    recipient: to,
+                    feeRate: fee,
+                    amount,
+                    memo,
+                },
+            ],
+        },
+        (error, result) => {
+            console.debug(error, result);
+            this.lastResult = { error, result };
+        }
+    );
+};
+
+export const withdraw_Binance_xdefi = async (object, from, amount) => {
+    const memo = `+:${AssetBNB.chain}.${AssetBNB.symbol}:${from}`;
+    object.request(
+        {
+            method: "deposit",
+            params: [
+                {
+                    asset: AssetBNB,
+                    from,
+                    recipient: BNB_contract_address,
+                    amount,
+                    memo,
+                },
+            ],
+        },
+        (error, result) => {
+            console.debug(error, result);
+            this.lastResult = { error, result };
+        }
+    );
+};
+
+export const withdraw_ThorBased_xdefi = async (object, from, amount, chain) => {
+    let memo = `+:${AssetBTC.chain}.${AssetBTC.symbol}:${from}`;
+    let to = BTC_contract_address;
+    let asset = AssetBTC;
+    if (chain === "BCH") {
+        memo = `+:${AssetBCH.chain}.${AssetBCH.symbol}:${from}`;
+        to = BCH_contract_address;
+        asset = AssetBCH;
+    } else if (chain === "BTC") {
+        memo = `+:${AssetBTC.chain}.${AssetBTC.symbol}:${from}`;
+        to = BTC_contract_address;
+        asset = AssetBTC;
+    }
+    object.request(
+        {
+            method: "deposit",
+            params: [
+                {
+                    asset: asset,
+                    from,
+                    recipient: to,
+                    amount,
+                    memo,
+                },
+            ],
+        },
+        (error, result) => {
+            console.debug(error, result);
+            this.lastResult = { error, result };
+        }
+    );
+};

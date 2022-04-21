@@ -275,6 +275,7 @@ const Content = () => {
                     );
                 }
             } else {
+                console.log(chain, "chain");
                 deposit_ThorBased_xdefi(
                     xfiObject.thorchain,
                     thor_address_xfi,

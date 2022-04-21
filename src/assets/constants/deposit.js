@@ -227,73 +227,84 @@ export const deposit_BitcoinBased_xdefi = async (
     amount,
     chain
 ) => {
-    let memo = `+:${AssetBTC.chain}.${AssetBTC.symbol}:${from}`;
-    let to = BTC_contract_address;
+    let memo = `+:${AssetBTC.chain}.${AssetBTC.symbol}`;
+    let to = from;
     let fee = BTC_fee;
     if (chain === "BCH") {
-        memo = `+:${AssetBCH.chain}.${AssetBCH.symbol}:${from}`;
-        to = BCH_contract_address;
+        memo = `+:${AssetBCH.chain}.${AssetBCH.symbol}`;
+        to = from;
         fee = BCH_fee;
     } else if (chain === "BTC") {
-        memo = `+:${AssetBTC.chain}.${AssetBTC.symbol}:${from}`;
-        to = BTC_contract_address;
+        memo = `+:${AssetBTC.chain}.${AssetBTC.symbol}`;
+        to = from;
         fee = BTC_fee;
     }
     object.request(
         {
-            method: "deposit",
+            method: "transfer",
             params: [
                 {
                     from,
                     recipient: to,
                     feeRate: fee,
-                    amount,
+                    amount: {
+                        amount: amount * 100000000,
+                        decimals: BCH_DECIMAL,
+                    },
                     memo,
                 },
             ],
         },
         (error, result) => {
-            console.debug(error, result);
-            this.lastResult = { error, result };
+            const lastResult = { error, result };
+            console.log(lastResult, "result");
         }
     );
 };
 
 export const deposit_Binance_xdefi = async (object, from, amount) => {
-    const memo = `+:${AssetBNB.chain}.${AssetBNB.symbol}:${from}`;
+    const memo = `+:${AssetBNB.chain}.${AssetBNB.symbol}`;
     object.request(
         {
-            method: "deposit",
+            method: "transfer",
             params: [
                 {
                     asset: AssetBNB,
                     from,
-                    recipient: BNB_contract_address,
-                    amount,
+                    recipient: from,
+                    amount: {
+                        amount: Number(amount),
+                        decimals: ETH_DECIMAL,
+                    },
                     memo,
                 },
             ],
         },
         (error, result) => {
-            console.debug(error, result);
-            this.lastResult = { error, result };
+            const lastResult = { error, result };
+            console.log(lastResult, "lastResult");
         }
     );
 };
 
 export const deposit_ThorBased_xdefi = async (object, from, amount, chain) => {
-    let memo = `+:${AssetBTC.chain}.${AssetBTC.symbol}:${from}`;
-    let to = BTC_contract_address;
+    let memo = `+:${AssetBTC.chain}.${AssetBTC.symbol}`;
+    let to = from;
     let asset = AssetBTC;
     if (chain === "BCH") {
-        memo = `+:${AssetBCH.chain}.${AssetBCH.symbol}:${from}`;
-        to = BCH_contract_address;
+        memo = `+:${AssetBCH.chain}.${AssetBCH.symbol}`;
+        to = from;
         asset = AssetBCH;
     } else if (chain === "BTC") {
-        memo = `+:${AssetBTC.chain}.${AssetBTC.symbol}:${from}`;
-        to = BTC_contract_address;
+        memo = `+:${AssetBTC.chain}.${AssetBTC.symbol}`;
+        to = from;
         asset = AssetBTC;
+    } else if (chain === "BNB") {
+        memo = `+:${AssetBNB.chain}.${AssetBNB.symbol}`;
+        to = from;
+        asset = AssetBNB;
     }
+    console.log(memo, "memo");
     object.request(
         {
             method: "deposit",
@@ -302,14 +313,17 @@ export const deposit_ThorBased_xdefi = async (object, from, amount, chain) => {
                     asset: asset,
                     from,
                     recipient: to,
-                    amount,
+                    amount: {
+                        amount: Number(amount) * 100000000,
+                        decimals: 8,
+                    },
                     memo,
                 },
             ],
         },
         (error, result) => {
-            console.debug(error, result);
-            this.lastResult = { error, result };
+            const lastResult = { error, result };
+            console.log(lastResult, "lastResult");
         }
     );
 };

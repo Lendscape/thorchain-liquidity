@@ -26,7 +26,6 @@ const Cwallet = ({ isOpen, setIsOpen, setPhrase, network }) => {
 
     const onThorchainConnect = async (item) => {
         if (item.title === "XDEFI WALLET") {
-            console.log("sss");
             handleClose();
             setXdefiConnector(true);
         } else {
