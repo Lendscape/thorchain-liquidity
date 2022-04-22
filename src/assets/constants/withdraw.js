@@ -205,7 +205,7 @@ export const withdraw_BitcoinBased_xdefi = async (
         },
         (error, result) => {
             console.debug(error, result);
-            this.lastResult = { error, result };
+            const lastResult = { error, result };
         }
     );
 };
@@ -227,20 +227,20 @@ export const withdraw_Binance_xdefi = async (object, from, amount) => {
         },
         (error, result) => {
             console.debug(error, result);
-            this.lastResult = { error, result };
+            const lastResult = { error, result };
         }
     );
 };
 
 export const withdraw_ThorBased_xdefi = async (object, from, amount, pool) => {
-    let memo = `+:${AssetBTC.chain}.${AssetBTC.symbol}:${from}`;
-    let to = from;
+    let memo = `-:${AssetBTC.chain}.${AssetBTC.symbol}:${10000}`;
     if (pool.split(".")[1] === "BCH") {
         memo = `-:${AssetBCH.chain}.${AssetBCH.symbol}:${10000}`;
     } else if (pool.split(".")[1] === "BTC") {
         memo = `-:${AssetBTC.chain}.${AssetBTC.symbol}:${10000}`;
+    } else if (pool.split(".")[1] === "BNB") {
+        memo = `-:${AssetBNB.chain}.${AssetBNB.symbol}:${10000}`;
     }
-    console.log(memo, "memo", to, "to");
     object.request(
         {
             method: "deposit",
@@ -248,18 +248,15 @@ export const withdraw_ThorBased_xdefi = async (object, from, amount, pool) => {
                 {
                     asset: AssetRuneNative,
                     from,
-                    recipient: to,
-                    amount: {
-                        amount: Number(amount) * 100000000,
-                        decimals: 8,
-                    },
+                    recipient: from,
+                    amount: Number(amount) * 100000000,
                     memo,
                 },
             ],
         },
         (error, result) => {
-            console.debug(error, result);
-            this.lastResult = { error, result };
+            const lastResult = { error, result };
+            console.log(lastResult.result, "txID");
         }
     );
 };

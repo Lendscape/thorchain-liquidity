@@ -601,7 +601,8 @@ const Content = () => {
                                 </Grid>
                                 <Grid item xs={6} xl={6}>
                                     {nFormatter(
-                                        Number(poolInfo.liquidityUnits)
+                                        Number(poolInfo.assetAdded) +
+                                            Number(poolInfo.runeAdded)
                                     )}
                                 </Grid>
                                 <Grid item xs={6} xl={6}>
