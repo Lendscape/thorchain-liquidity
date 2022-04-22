@@ -21,6 +21,7 @@ import {
     AssetBNB,
     assetToBase,
     assetAmount,
+    AssetRuneNative,
 } from "@xchainjs/xchain-util";
 import { Network } from "@xchainjs/xchain-client";
 
@@ -301,27 +302,20 @@ export const deposit_Binance_xdefi = async (object, from, amount, chain) => {
 export const deposit_ThorBased_xdefi = async (object, from, amount, chain) => {
     let memo = `+:${AssetBTC.chain}.${AssetBTC.symbol}`;
     let to = from;
-    let asset = AssetBTC;
     if (chain === "BCH") {
         memo = `+:${AssetBCH.chain}.${AssetBCH.symbol}`;
-        to = from;
-        asset = AssetBCH;
     } else if (chain === "BTC") {
         memo = `+:${AssetBTC.chain}.${AssetBTC.symbol}`;
-        to = from;
-        asset = AssetBTC;
     } else if (chain === "BNB") {
         memo = `+:${AssetBNB.chain}.${AssetBNB.symbol}`;
-        to = from;
-        asset = AssetBNB;
     }
-    console.log(memo, "memo");
+
     object.request(
         {
             method: "deposit",
             params: [
                 {
-                    asset: asset,
+                    asset: AssetRuneNative,
                     from,
                     recipient: to,
                     amount: {

@@ -81,12 +81,13 @@ const Content = () => {
             console.log(chain, "pooldata");
             for (let i = 0; i < pooldata.length; i++) {
                 if (pooldata[i].asset.split(".")[1] === chain) {
-                    console.log(pooldata[i], "s");
+                    console.log(pooldata[i], "s1");
                     setPoolInfo(pooldata[i]);
                 }
                 if (chain === "BUSD") {
                     if (pooldata[i].asset.split(".")[1] === "BUSD-74E") {
                         setPoolInfo(pooldata[i]);
+                        console.log(pooldata[i], "s2");
                     }
                 }
                 if (chain === "USDT") {
@@ -95,6 +96,7 @@ const Content = () => {
                         "USDT-0XA3910454BF2CB59B8B3A401589A3BACC5CA42306"
                     ) {
                         setPoolInfo(pooldata[i]);
+                        console.log(pooldata[i], "s");
                     }
                 }
             }
@@ -143,6 +145,7 @@ const Content = () => {
 
     useEffect(() => {
         const network = network_val ? network_val : 1;
+        console.log(network, "network");
         pooldata(network);
     }, [network_val, chain]);
 

@@ -31,6 +31,7 @@ export const getPooldata_testnet = async () => {
         const data = await axios.get(
             `https://testnet.midgard.thorchain.info/v2/pools`
         );
+        console.log(data.data, "test");
         if (data.data) {
             return data.data;
         }
@@ -45,6 +46,7 @@ export const getPooldata_stagenet = async () => {
         const data = await axios.get(
             `https://midgard-stagenet.lendscape.so/v2/pools`
         );
+        console.log(data.data, "stage");
         if (data.data) {
             return data.data;
         }
@@ -59,6 +61,7 @@ export const getPooldata_chaosnet = async () => {
         const data = await axios.get(
             `https://midgard-chaosnet.lendscape.so/v2/pools`
         );
+        console.log(data.data, "chaos");
         if (data.data) {
             return data.data;
         }
