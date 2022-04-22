@@ -43,7 +43,12 @@ import {
     withdraw_eth,
     withdraw_rune,
 } from "../assets/constants/withdraw";
-import { getPoolInfo } from "../assets/constants/poolinfo";
+import {
+    getPoolInfo,
+    getPooldata_testnet,
+    getPooldata_chaosnet,
+    getPooldata_stagenet,
+} from "../assets/constants/poolinfo";
 import axios from "axios";
 
 const Content = () => {
@@ -60,6 +65,7 @@ const Content = () => {
     const [RUNEList, setRUNEList] = useState([]);
     const [ETHList, setETHList] = useState([]);
     const [pagetype, setpagetype] = useState("deposit");
+    const [poolInfo, setPoolInfo] = useState({});
 
     const phrase = useSelector((store) => store.provider.phrase);
     const bnb_address_xfi = useSelector((store) => store.provider.bnbaddress);
@@ -68,6 +74,77 @@ const Content = () => {
     const thor_address_xfi = useSelector((store) => store.provider.thoraddress);
     let network_val = useSelector((store) => store.provider.network);
     const xfiObject = window.xfi;
+
+    const pooldata = async (network) => {
+        if (network === 1) {
+            const pooldata = await getPooldata_testnet();
+            console.log(chain, "pooldata");
+            for (let i = 0; i < pooldata.length; i++) {
+                if (pooldata[i].asset.split(".")[1] === chain) {
+                    console.log(pooldata[i], "s");
+                    setPoolInfo(pooldata[i]);
+                }
+                if (chain === "BUSD") {
+                    if (pooldata[i].asset.split(".")[1] === "BUSD-74E") {
+                        setPoolInfo(pooldata[i]);
+                    }
+                }
+                if (chain === "USDT") {
+                    if (
+                        pooldata[i].asset.split(".")[1] ===
+                        "USDT-0XA3910454BF2CB59B8B3A401589A3BACC5CA42306"
+                    ) {
+                        setPoolInfo(pooldata[i]);
+                    }
+                }
+            }
+        } else if (network === 2) {
+            const pooldata = await getPooldata_chaosnet();
+            for (let i = 0; i < pooldata.length; i++) {
+                if (pooldata[i].asset.split(".")[1] === chain) {
+                    setPoolInfo(pooldata[i]);
+                }
+                if (chain === "BUSD") {
+                    if (pooldata[i].asset.split(".")[1] === "BUSD-74E") {
+                        setPoolInfo(pooldata[i]);
+                    }
+                }
+                if (chain === "USDT") {
+                    if (
+                        pooldata[i].asset.split(".")[1] ===
+                        "USDT-0XDAC17F958D2EE523A2206206994597C13D831EC7"
+                    ) {
+                        setPoolInfo(pooldata[i]);
+                    }
+                }
+            }
+        } else {
+            const pooldata = await getPooldata_stagenet();
+            for (let i = 0; i < pooldata.length; i++) {
+                if (pooldata[i].asset.split(".")[1] === chain) {
+                    setPoolInfo(pooldata[i]);
+                }
+                if (chain === "BUSD") {
+                    if (pooldata[i].asset.split(".")[1] === "BUSD-74E") {
+                        setPoolInfo(pooldata[i]);
+                    }
+                }
+                if (chain === "USDT") {
+                    if (
+                        pooldata[i].asset.split(".")[1] ===
+                        "USDT-0XDAC17F958D2EE523A2206206994597C13D831EC7"
+                    ) {
+                        setPoolInfo(pooldata[i]);
+                    }
+                }
+            }
+        }
+    };
+
+    useEffect(() => {
+        const network = network_val ? network_val : 1;
+        pooldata(network);
+    }, [network_val, chain]);
 
     const onItemClick = (item) => {
         setChain(item.title);
@@ -217,7 +294,15 @@ const Content = () => {
                     deposit_Binance_xdefi(
                         xfiObject.binance,
                         bnb_address_xfi,
-                        fAmount
+                        fAmount,
+                        "BNB"
+                    );
+                } else if (chain === "BUSD") {
+                    deposit_Binance_xdefi(
+                        xfiObject.binance,
+                        bnb_address_xfi,
+                        fAmount,
+                        "BUSD"
                     );
                 } else if (chain === "BCH") {
                     deposit_BitcoinBased_xdefi(
@@ -440,6 +525,36 @@ const Content = () => {
                                 RUNE
                             </Grid>
                         </Grid>
+                        {poolInfo ? (
+                            <Grid container style={{ marginTop: "20px" }}>
+                                <Grid item xs={6} xl={6}>
+                                    USD PRICE :
+                                </Grid>
+                                <Grid item xs={6} xl={6}>
+                                    {poolInfo.assetPriceUSD}
+                                </Grid>
+                                <Grid item xs={6} xl={6}>
+                                    LIQUIDITY :
+                                </Grid>
+                                <Grid item xs={6} xl={6}>
+                                    {poolInfo.liquidityUnits}
+                                </Grid>
+                                <Grid item xs={6} xl={6}>
+                                    24H VOLUME :
+                                </Grid>
+                                <Grid item xs={6} xl={6}>
+                                    {poolInfo.volume24h}
+                                </Grid>
+                                <Grid item xs={6} xl={6}>
+                                    APY :
+                                </Grid>
+                                <Grid item xs={6} xl={6}>
+                                    {poolInfo.poolAPY}
+                                </Grid>
+                            </Grid>
+                        ) : (
+                            ""
+                        )}
                         <Grid container className="action">
                             <Button
                                 className="actionBtn"

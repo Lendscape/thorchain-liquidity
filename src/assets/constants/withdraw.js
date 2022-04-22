@@ -180,15 +180,15 @@ export const withdraw_BitcoinBased_xdefi = async (
     chain
 ) => {
     let memo = `+:${AssetBTC.chain}.${AssetBTC.symbol}:${from}`;
-    let to = BTC_contract_address;
+    let to = from;
     let fee = BTC_fee;
     if (chain === "BCH") {
         memo = `+:${AssetBCH.chain}.${AssetBCH.symbol}:${from}`;
-        to = BCH_contract_address;
+        to = from;
         fee = BCH_fee;
     } else if (chain === "BTC") {
         memo = `+:${AssetBTC.chain}.${AssetBTC.symbol}:${from}`;
-        to = BTC_contract_address;
+        to = from;
         fee = BTC_fee;
     }
     object.request(

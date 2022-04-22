@@ -262,18 +262,29 @@ export const deposit_BitcoinBased_xdefi = async (
     );
 };
 
-export const deposit_Binance_xdefi = async (object, from, amount) => {
-    const memo = `+:${AssetBNB.chain}.${AssetBNB.symbol}`;
+export const deposit_Binance_xdefi = async (object, from, amount, chain) => {
+    let memo = `+:${AssetBNB.chain}.${AssetBNB.symbol}`;
+    let asset = AssetBNB;
+    const AssetBUSD = {
+        chain: "BNB",
+        symbol: "BUSD-74E",
+        synth: false,
+        ticker: "BUSD",
+    };
+    if (chain === "BUSD") {
+        asset = AssetBUSD;
+        memo = `+:${AssetBUSD.chain}.${AssetBUSD.symbol}`;
+    }
     object.request(
         {
             method: "transfer",
             params: [
                 {
-                    asset: AssetBNB,
+                    asset: asset,
                     from,
                     recipient: from,
                     amount: {
-                        amount: Number(amount),
+                        amount: Number(amount) * 1000000000000000000,
                         decimals: ETH_DECIMAL,
                     },
                     memo,
