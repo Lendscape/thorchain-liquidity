@@ -110,7 +110,6 @@ const Header = ({ phrase, setPhrase, setChainNetwork }) => {
                 isOpen={isOpenDialog}
                 setIsOpen={setIsOpenDialog}
                 setPhrase={setPhrase}
-                network={network}
             />
         </header>
     );

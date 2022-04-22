@@ -18,7 +18,7 @@ import useStyles from "../assets/constants/styles";
 import CloseIcon from "@mui/icons-material/Close";
 import { Wallets } from "../assets/constants/wallets";
 
-const Cwallet = ({ isOpen, setIsOpen, setPhrase, network }) => {
+const Cwallet = ({ isOpen, setIsOpen, setPhrase }) => {
     const classes = useStyles();
     const [xdefiConnector, setXdefiConnector] = useState(false);
 

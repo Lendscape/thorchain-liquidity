@@ -2,10 +2,6 @@ import React, { useState, useEffect } from "react";
 
 import { Network } from "@xchainjs/xchain-client";
 import { useSelector } from "react-redux";
-import { Client as bitcoinCashClient } from "@xchainjs/xchain-bitcoincash";
-import { Client as bitcoinClient } from "@xchainjs/xchain-bitcoincash";
-import { Client as binanceClient } from "@xchainjs/xchain-binance";
-import { Client as ethereumClient } from "@xchainjs/xchain-ethereum";
 import { Client as thorchainClient } from "@xchainjs/xchain-thorchain";
 // Import Material UI Components
 import Box from "@mui/material/Box";
@@ -44,7 +40,6 @@ import {
     withdraw_rune,
 } from "../assets/constants/withdraw";
 import {
-    getPoolInfo,
     getPooldata_testnet,
     getPooldata_chaosnet,
     getPooldata_stagenet,
@@ -59,11 +54,7 @@ const Content = () => {
     const [chain, setChain] = useState("BNB");
     const [multichain, setMultichain] = useState("BNBLUNE");
     const [choose, setChoose] = useState(1);
-    const [BCHList, setBCHList] = useState([]);
-    const [BNBList, setBNBList] = useState([]);
-    const [BTCList, setBTCList] = useState([]);
     const [RUNEList, setRUNEList] = useState([]);
-    const [ETHList, setETHList] = useState([]);
     const [pagetype, setpagetype] = useState("deposit");
     const [poolInfo, setPoolInfo] = useState({});
 
@@ -107,7 +98,7 @@ const Content = () => {
                     setPoolInfo(pooldata[i]);
                 }
                 if (chain === "BUSD") {
-                    if (pooldata[i].asset.split(".")[1] === "BUSD-74E") {
+                    if (pooldata[i].asset.split(".")[1] === "BUSD-BD1") {
                         setPoolInfo(pooldata[i]);
                     }
                 }
@@ -141,6 +132,22 @@ const Content = () => {
                 }
             }
         }
+    };
+
+    const nFormatter = (num) => {
+        if (num >= 1000000000) {
+            const number = (num / 1000000000).toFixed(2);
+            return `${number}G`;
+        }
+        if (num >= 1000000) {
+            const number = (num / 1000000).toFixed(2);
+            return `${number}M`;
+        }
+        if (num >= 1000) {
+            const number = (num / 1000).toFixed(2);
+            return `${number}K`;
+        }
+        return num;
     };
 
     useEffect(() => {
@@ -534,25 +541,27 @@ const Content = () => {
                                     USD PRICE :
                                 </Grid>
                                 <Grid item xs={6} xl={6}>
-                                    {poolInfo.assetPriceUSD}
+                                    {nFormatter(Number(poolInfo.assetPriceUSD))}
                                 </Grid>
                                 <Grid item xs={6} xl={6}>
                                     LIQUIDITY :
                                 </Grid>
                                 <Grid item xs={6} xl={6}>
-                                    {poolInfo.liquidityUnits}
+                                    {nFormatter(
+                                        Number(poolInfo.liquidityUnits)
+                                    )}
                                 </Grid>
                                 <Grid item xs={6} xl={6}>
                                     24H VOLUME :
                                 </Grid>
                                 <Grid item xs={6} xl={6}>
-                                    {poolInfo.volume24h}
+                                    {nFormatter(Number(poolInfo.volume24h))}
                                 </Grid>
                                 <Grid item xs={6} xl={6}>
                                     APY :
                                 </Grid>
                                 <Grid item xs={6} xl={6}>
-                                    {poolInfo.poolAPY}
+                                    {nFormatter(Number(poolInfo.poolAPY))}
                                 </Grid>
                             </Grid>
                         ) : (

@@ -1,13 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Header from "./Header";
 import Content from "./Content";
 
 const Layout = ({ children }) => {
     const [phrase, setPhrase] = useState();
     const [chainNetwork, setChainNetwork] = useState(1);
-    useEffect(() => {
-        console.log(phrase, "phrase");
-    }, [phrase]);
+
     return (
         <div>
             <Header
