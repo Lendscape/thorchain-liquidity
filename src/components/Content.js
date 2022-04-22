@@ -38,6 +38,9 @@ import {
     withdraw_ltc,
     withdraw_eth,
     withdraw_rune,
+    withdraw_Binance_xdefi,
+    withdraw_BitcoinBased_xdefi,
+    withdraw_ThorBased_xdefi,
 } from "../assets/constants/withdraw";
 import {
     getPooldata_testnet,
@@ -243,8 +246,21 @@ const Content = () => {
             } catch (e) {
                 console.log(e);
             }
+        } else if (window.xfi && thor_address_xfi) {
+            console.log("xficonnect");
+            try {
+                const RUNE_list = await axios.get(
+                    `https://testnet.midgard.thorchain.info/v2/member/${thor_address_xfi}`
+                );
+                if (RUNE_list.data) {
+                    console.log(RUNE_list.data.pools, "runelist");
+                    setRUNEList(RUNE_list.data.pools);
+                }
+            } catch (e) {
+                console.log(e);
+            }
         }
-    }, [phrase, network_val]);
+    }, [phrase, network_val, thor_address_xfi]);
 
     const Deposit = async () => {
         network_val = network_val ? network_val : 1;
@@ -383,41 +399,78 @@ const Content = () => {
         }
     };
 
-    const Withdraw = async (val, pool, ramount, amount) => {
+    const Withdraw = async (chain, pool, ramount, amount) => {
+        console.log(chain, pool, ramount, amount, "detail");
         if (ramount < amount) {
             alert("blance is enough");
             return;
         } else {
-            console.log(ramount, amount, "amount");
             if (phrase) {
                 console.log(pool, "pool");
-                if (val === "BTC") {
+                if (chain === "BTC") {
                     withdraw_btc(phrase, pool, amount);
-                } else if (val === "BCH") {
+                } else if (chain === "BCH") {
                     withdraw_bch(phrase, pool, amount);
-                } else if (val === "LTC") {
+                } else if (chain === "LTC") {
                     withdraw_ltc(phrase, pool, amount);
-                } else if (val === "BNB") {
+                } else if (chain === "BNB") {
                     withdraw_bnb(phrase, pool, amount);
-                } else if (val === "ETH") {
+                } else if (chain === "ETH") {
                     withdraw_eth(phrase, pool, amount);
-                } else if (val === "RUNE") {
+                } else if (chain === "RUNE") {
                     withdraw_rune(phrase, pool, amount);
-                } else if (val === "BTCRUNE") {
+                } else if (chain === "BTCRUNE") {
                     withdraw_btc(phrase, pool, amount);
                     withdraw_rune(phrase, pool, amount);
-                } else if (val === "BCHRUNE") {
+                } else if (chain === "BCHRUNE") {
                     withdraw_bch(phrase, pool, amount);
                     withdraw_rune(phrase, pool, amount);
-                } else if (val === "BNBRUNE") {
+                } else if (chain === "BNBRUNE") {
                     withdraw_bnb(phrase, pool, amount);
                     withdraw_rune(phrase, pool, amount);
-                } else if (val === "LTCRUNE") {
+                } else if (chain === "LTCRUNE") {
                     withdraw_ltc(phrase, pool, amount);
                     withdraw_rune(phrase, pool, amount);
-                } else if (val === "ETHRUNE") {
+                } else if (chain === "ETHRUNE") {
                     withdraw_eth(phrase, pool, amount);
                     withdraw_rune(phrase, pool, amount);
+                }
+            } else if (window.xfi && thor_address_xfi) {
+                if (chain === "BNB") {
+                    withdraw_Binance_xdefi(
+                        xfiObject.binance,
+                        bnb_address_xfi,
+                        amount,
+                        "BNB"
+                    );
+                } else if (chain === "BUSD") {
+                    withdraw_Binance_xdefi(
+                        xfiObject.binance,
+                        bnb_address_xfi,
+                        amount,
+                        "BUSD"
+                    );
+                } else if (chain === "BCH") {
+                    withdraw_BitcoinBased_xdefi(
+                        xfiObject.bitcoincash,
+                        bch_address_xfi,
+                        amount,
+                        "BCH"
+                    );
+                } else if (chain === "BTC") {
+                    withdraw_BitcoinBased_xdefi(
+                        xfiObject.bitcoin,
+                        btc_address_xfi,
+                        amount,
+                        "BTC"
+                    );
+                } else if (chain === "RUNE") {
+                    withdraw_ThorBased_xdefi(
+                        xfiObject.thorchain,
+                        thor_address_xfi,
+                        amount,
+                        pool
+                    );
                 }
             } else {
                 alert("Plz connect wallet!");

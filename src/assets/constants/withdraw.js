@@ -21,6 +21,7 @@ import {
     AssetBNB,
     assetToBase,
     assetAmount,
+    AssetRuneNative,
 } from "@xchainjs/xchain-util";
 import { Network } from "@xchainjs/xchain-client";
 
@@ -183,12 +184,10 @@ export const withdraw_BitcoinBased_xdefi = async (
     let to = from;
     let fee = BTC_fee;
     if (chain === "BCH") {
-        memo = `+:${AssetBCH.chain}.${AssetBCH.symbol}:${from}`;
-        to = from;
+        memo = `-:${AssetBCH.chain}.${AssetBCH.symbol}:${10000}`;
         fee = BCH_fee;
     } else if (chain === "BTC") {
-        memo = `+:${AssetBTC.chain}.${AssetBTC.symbol}:${from}`;
-        to = from;
+        memo = `-:${AssetBTC.chain}.${AssetBTC.symbol}:${10000}`;
         fee = BTC_fee;
     }
     object.request(
@@ -212,7 +211,7 @@ export const withdraw_BitcoinBased_xdefi = async (
 };
 
 export const withdraw_Binance_xdefi = async (object, from, amount) => {
-    const memo = `+:${AssetBNB.chain}.${AssetBNB.symbol}:${from}`;
+    const memo = `-:${AssetBNB.chain}.${AssetBNB.symbol}:${10000}`;
     object.request(
         {
             method: "deposit",
@@ -233,28 +232,27 @@ export const withdraw_Binance_xdefi = async (object, from, amount) => {
     );
 };
 
-export const withdraw_ThorBased_xdefi = async (object, from, amount, chain) => {
+export const withdraw_ThorBased_xdefi = async (object, from, amount, pool) => {
     let memo = `+:${AssetBTC.chain}.${AssetBTC.symbol}:${from}`;
-    let to = BTC_contract_address;
-    let asset = AssetBTC;
-    if (chain === "BCH") {
-        memo = `+:${AssetBCH.chain}.${AssetBCH.symbol}:${from}`;
-        to = BCH_contract_address;
-        asset = AssetBCH;
-    } else if (chain === "BTC") {
-        memo = `+:${AssetBTC.chain}.${AssetBTC.symbol}:${from}`;
-        to = BTC_contract_address;
-        asset = AssetBTC;
+    let to = from;
+    if (pool.split(".")[1] === "BCH") {
+        memo = `-:${AssetBCH.chain}.${AssetBCH.symbol}:${10000}`;
+    } else if (pool.split(".")[1] === "BTC") {
+        memo = `-:${AssetBTC.chain}.${AssetBTC.symbol}:${10000}`;
     }
+    console.log(memo, "memo", to, "to");
     object.request(
         {
             method: "deposit",
             params: [
                 {
-                    asset: asset,
+                    asset: AssetRuneNative,
                     from,
                     recipient: to,
-                    amount,
+                    amount: {
+                        amount: Number(amount) * 100000000,
+                        decimals: 8,
+                    },
                     memo,
                 },
             ],
